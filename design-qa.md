@@ -22,6 +22,20 @@
 
 **Interaction and runtime checks:** Password visibility toggles correctly. "Create an account" reaches the existing onboarding flow and its sign-in link returns to login. The latest desktop and mobile captures keep the form readable; mobile document width equals viewport width. The animated layer has `pointer-events: none`, and the reduced-motion media rule disables animation. Browser console reported no errors. TypeScript, targeted ESLint, 164 tests, and production build passed before this CSS-only refinement.
 
-**Implementation checklist:** Keep the working sign-in and onboarding routes, conditional Google provider, responsive card, and generated background asset together in the change.
+## Scan story panel design QA
+
+**Source visual truth:** `C:/Users/OrCon/AppData/Local/Temp/codex-clipboard-d8b72c47-4574-4a7a-bad3-013166950e8c.png` (1904 × 1015 px). This is the scan/loading view the story panel overlays.
+
+**Implementation:** `http://127.0.0.1:3400/audit-loading?company=JDP%20%26%20Co&url=https%3A%2F%2Fexample.com`, captured in Codex's in-app browser, tab 4. Checked at the default desktop viewport and a 390 × 844 mobile viewport. State: the scan is active and the story panel is open from the first render.
+
+**Full-view comparison:** The underlying scan keeps its near-black purple canvas, centered research state, live status chip, and footer progress rail from the supplied screen. A semi-opaque purple glass panel now sits above it with a blurred backdrop, so the scan remains present without competing with the story.
+
+**Focused region comparison:** The panel uses one readable, continuous scroll track rather than chapter navigation. Its copy explains what is researched, why the scan takes time, how the evidence base is assembled, and what the workspace helps a user do next. Text begins moving automatically; the only in-story control is a small pause/play icon. At the end of the scroll, a single “Back to scan” action appears.
+
+**Responsive and interaction checks:** Desktop and 390px mobile captures keep the panel inside the viewport with readable type and no horizontal overflow. Pausing changes the icon and stops the scroll. Scrolling to the end reveals “The story is complete” and “Back to scan”; activating the action closes the panel and returns to the loading view. Reloading the route opens the panel automatically. Escape remains available as a keyboard dismissal path.
+
+**Findings:** No actionable P0, P1, or P2 issues remain for the requested scan story treatment.
+
+**Implementation checklist:** Keep the scan route, live polling, pause/resume behavior, automatic story opening, semi-opaque glass treatment, and final Back to scan action together in the change.
 
 final result: passed

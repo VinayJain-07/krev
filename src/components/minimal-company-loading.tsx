@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LogoutButton } from "./logout-button";
+import { AuditStoryPanel } from "./audit-story-panel";
 
 export type AuditJobState = {
   status: string;
@@ -83,6 +84,9 @@ export function MinimalCompanyLoading({
   const [selectedModel, setSelectedModel] = useState("Claude 3.7 Sonnet (Fast)");
   const [newCompanyInput, setNewCompanyInput] = useState("");
   const [newUrlInput, setNewUrlInput] = useState("");
+  const [showStory, setShowStory] = useState(true);
+  const [initialDocumentCount] = useState(() => initial?.documents.length ?? 0);
+  const workspaceReady = Boolean(jobId && job?.companyId && (["DONE", "PARTIAL"].includes(job.status) || job.documents.length > initialDocumentCount));
 
   // Live crawl event ticker
   const [liveLogs, setLiveLogs] = useState<string[]>([
@@ -121,18 +125,20 @@ export function MinimalCompanyLoading({
           ]);
         }
 
-        const firstReportReady = next.documents.length >= 1;
-        if (["DONE", "PARTIAL"].includes(next.status) || firstReportReady) {
-          window.clearInterval(timer);
-          window.setTimeout(() => router.push(`/dashboard/${next.companyId}`), 700);
-        }
       } catch {
         // network retry
       }
     }, 1800);
 
     return () => window.clearInterval(timer);
-  }, [jobId, isPaused, job?.status, router]);
+  }, [jobId, isPaused, job?.status]);
+
+  // Let someone finish reading the story when the first report becomes ready.
+  useEffect(() => {
+    if (!jobId || !workspaceReady || showStory || isPaused || !job?.companyId) return;
+    const timer = window.setTimeout(() => router.push(`/dashboard/${job.companyId}`), 700);
+    return () => window.clearTimeout(timer);
+  }, [jobId, workspaceReady, showStory, isPaused, job?.companyId, router]);
 
   // SIMULATED PROGRESS (only when standalone without real jobId)
   useEffect(() => {
@@ -287,6 +293,10 @@ export function MinimalCompanyLoading({
     : isError
     ? (job?.error || "We encountered an issue during crawl. Click Retry to continue.")
     : stepText;
+
+  function closeStory() {
+    setShowStory(false);
+  }
 
   return (
     <div className="relative min-h-screen w-full bg-[#05030a] text-slate-100 flex flex-col justify-between overflow-hidden font-sans select-none">
@@ -534,6 +544,16 @@ export function MinimalCompanyLoading({
           </div>
         </div>
       </footer>
+
+      {showStory && (
+        <AuditStoryPanel
+          company={company}
+          progress={progress}
+          isLive={Boolean(jobId)}
+          scanActive={!isStopped && !isError}
+          onRequestClose={closeStory}
+        />
+      )}
 
       {/* ========================================================= */}
       {/* MODAL: ADD COMPANY QUICK INPUT (Demo Mode) */}
