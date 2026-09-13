@@ -14317,3 +14317,39 @@ html[data-theme="dark"] .agents-pane .agent-output :where(
 .document-actions .office-download:disabled, .spreadsheet-callout button:disabled { opacity: .6; cursor: wait; }
 .spreadsheet-callout button { padding: 8px 10px; border: 0; border-radius: 8px; color: white; background: #138260; font-size: 11px; font-weight: 700; cursor: pointer; }
 @media (max-width: 760px) { .document-actions .spreadsheet-action { display: flex; } .spreadsheet-callout button { grid-column: 2; justify-self: start; } }
+
+/* Live AEO audit controls and evidence rows */
+.geo-scan-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid #bfd4d7; border-radius: 7px; color: #315d70; background: #eef6f7; font: 650 9px/1.2 var(--font-sans); cursor: pointer; }
+.geo-scan-btn:disabled { opacity: .55; cursor: wait; }
+.geo-scan-status { margin: 0; padding: 8px 10px; border-bottom: 1px solid #ebe7e4; color: #746e6a; font-size: 9px; line-height: 1.4; }
+.geo-scan-error { margin: 10px; padding: 9px; display: flex; align-items: flex-start; gap: 7px; border: 1px solid #efb8ad; border-radius: 7px; color: #8c382c; background: #fff2ef; font-size: 9.5px; line-height: 1.45; }
+.geo-scan-error > span { flex: 1; }
+.geo-scan-error button { border: 0; color: inherit; background: transparent; font: inherit; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.geo-check-row { padding: 9px 10px; display: grid; grid-template-columns: 18px minmax(0, 1fr) auto; align-items: start; gap: 7px; border-bottom: 1px solid #eeeae7; }
+.geo-check-status.pass { color: #0c9b6e; }
+.geo-check-status.fail { color: #d78309; }
+.geo-check-status.unknown { color: #8b8581; }
+.geo-check-row strong, .geo-check-row small { display: block; }
+.geo-check-row strong { font-size: 10px; line-height: 1.3; }
+.geo-check-row small { margin-top: 2px; color: #746e6a; font-size: 9px; line-height: 1.4; }
+.geo-check-row a { margin-top: 4px; display: inline-flex; align-items: center; gap: 2px; color: #315d70; font-size: 8.5px; text-decoration: none; }
+.geo-check-row em { color: #746e6a; font-size: 8px; font-style: normal; white-space: nowrap; }
+.geo-scan-failures { margin: 10px; padding: 10px; border: 1px solid #edd4ab; border-radius: 7px; background: #fffaf2; }
+.geo-scan-failures strong { font-size: 9.5px; }
+.geo-scan-failures p { margin: 5px 0 0; color: #6d6257; font-size: 8.5px; line-height: 1.4; overflow-wrap: anywhere; }
+.geo-scan-failures a { color: #315d70; }
+.geo-snapshot-row { padding: 9px 10px; border-bottom: 1px solid #eeeae7; }
+.geo-snapshot-row a { display: inline-flex; align-items: center; gap: 4px; color: #315d70; font-size: 10px; font-weight: 700; line-height: 1.35; text-decoration: none; overflow-wrap: anywhere; }
+.geo-snapshot-row p { margin: 4px 0; color: #514b48; font-size: 9px; line-height: 1.4; }
+.geo-snapshot-row small { color: #817a77; font-size: 8px; }
+html[data-theme="dark"] .geo-scan-btn { border-color: #36545a; color: #b3dee3; background: #173036; }
+html[data-theme="dark"] .geo-scan-status, html[data-theme="dark"] .geo-check-row small, html[data-theme="dark"] .geo-check-row em { color: #aaa3a0; }
+html[data-theme="dark"] .geo-scan-error { border-color: #7e413c; color: #ffc4ba; background: #331b1b; }
+html[data-theme="dark"] .geo-check-row { border-color: #363132; }
+html[data-theme="dark"] .geo-check-row a, html[data-theme="dark"] .geo-scan-failures a { color: #a1d7dd; }
+html[data-theme="dark"] .geo-scan-failures { border-color: #624d32; background: #2d251d; }
+html[data-theme="dark"] .geo-scan-failures p { color: #d5c9b9; }
+html[data-theme="dark"] .geo-snapshot-row { border-color: #363132; }
+html[data-theme="dark"] .geo-snapshot-row a { color: #a1d7dd; }
+html[data-theme="dark"] .geo-snapshot-row p { color: #ded8d3; }
+html[data-theme="dark"] .geo-snapshot-row small { color: #aaa3a0; }

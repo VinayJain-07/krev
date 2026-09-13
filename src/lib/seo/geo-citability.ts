@@ -1,265 +1,225 @@
 import * as cheerio from "cheerio";
 
+export type AeoCheck = {
+  id: string;
+  label: string;
+  status: "pass" | "fail" | "unknown";
+  detail: string;
+  sourceUrl?: string;
+};
+
 export type AnswerPassage = {
   heading: string;
   passage: string;
   type: "definition" | "procedure" | "comparison" | "faq";
-  citabilityScore: number;
   sourceUrl: string;
   path: string;
   query: string;
-  monthlyAiVolume: string;
-};
-
-export type CitationSource = {
-  domain: string;
-  name: string;
-  status: "Active Citation" | "Direct Referral" | "Entity Mention" | "Ecosystem Authority";
-  volume: string;
-  iconBg: string;
+  wordCount: number;
 };
 
 export type GeoCitabilityReport = {
-  geoScore: number;
-  overallCitabilityScore: number;
-  activeSignalsCount: number;
-  aiVisibility: number;
-  platformReadiness: {
-    composite: number;
-    chatgpt: number;
-    perplexity: number;
-    gemini: number;
-    copilot: number;
-  };
-  readinessScore: number;
-  technicalGeoScore: number;
-  backlinkAuthorityScore: number;
+  readinessScore: number | null;
+  citationReadinessStage: "Insufficient evidence" | "Foundational" | "Developing" | "Ready for review";
   answerPassages: AnswerPassage[];
-  citationSources: CitationSource[];
+  checks: AeoCheck[];
   entitySignals: {
+    totalAuditedPages: number;
+    totalAuditedWords: number;
     brandEntityFound: boolean;
     categoryDeclared: boolean;
     clearValueProp: boolean;
     structuredListsCount: number;
     tablesCount: number;
     externalReferenceDomains: number;
-    totalAuditedPages: number;
-    totalAuditedWords: number;
+    schemaTypes: string[];
+    titleDescriptionPages: number;
+    headingPages: number;
+    canonicalPages: number;
+    indexablePages: number;
   };
-  aggregateStats: {
-    citablePassagesCount: number;
-    aiImpressionIndex: string;
-    aiSearchVolume: string;
-    totalAuditedWordsFormatted: string;
-  };
-  citationReadinessStage: "Initial Discovery" | "Entity Defined" | "Answer Engine Ready" | "High Authority Citations";
   strategicActions: string[];
 };
 
-export function analyzeGeoCitability(
-  company: { name: string; websiteUrl: string; category?: string | null; description?: string | null },
-  crawlPages: Array<{ url: string; title?: string | null; description?: string | null; content: string }>,
-): GeoCitabilityReport {
-  const brandName = company.name.toLowerCase();
-  let cleanHost = "company.com";
-  try {
-    cleanHost = new URL(company.websiteUrl.startsWith("http") ? company.websiteUrl : `https://${company.websiteUrl}`).hostname.replace(/^www\./, "");
-  } catch {}
+export type AeoScanReport = GeoCitabilityReport & {
+  scannedAt: string;
+  attemptedPages: number;
+  failedPages: Array<{ url: string; reason: string }>;
+  savedCrawlPages: Array<{ url: string; title: string | null; description: string | null; wordCount: number; fetchedAt: string }>;
+};
 
-  const categoryName = company.category || "B2B Solutions";
+type Company = { name: string; websiteUrl: string; category?: string | null };
+type Page = { url: string; html: string };
+
+function clean(value: string) {
+  return value.replace(/\s+/g, " ").trim();
+}
+
+function wordCount(value: string) {
+  return clean(value).split(/\s+/).filter(Boolean).length;
+}
+
+function schemaItems(value: unknown): Array<Record<string, unknown>> {
+  if (Array.isArray(value)) return value.flatMap(schemaItems);
+  if (!value || typeof value !== "object") return [];
+  const item = value as Record<string, unknown>;
+  return [item, ...schemaItems(item["@graph"])];
+}
+
+function hasSchemaContext(value: unknown): boolean {
+  if (Array.isArray(value)) return value.some(hasSchemaContext);
+  if (!value || typeof value !== "object") return false;
+  const context = (value as Record<string, unknown>)["@context"];
+  return typeof context === "string" && /^https?:\/\/schema\.org\/?$/i.test(context);
+}
+
+function passageType(heading: string): AnswerPassage["type"] {
+  if (/\?$/.test(heading) || /^(what|who|which|when|where|can|does|is)\b/i.test(heading)) return "faq";
+  if (/^(how|steps|process|guide|ways)\b/i.test(heading)) return "procedure";
+  if (/\b(vs\.?|versus|compare|comparison|alternatives?)\b/i.test(heading)) return "comparison";
+  return "definition";
+}
+
+export function analyzeGeoCitability(company: Company, pages: Page[], supportingChecks: AeoCheck[] = []): GeoCitabilityReport {
+  const brand = company.name.toLowerCase();
+  const category = company.category?.trim().toLowerCase() ?? "";
+  const officialHost = new URL(company.websiteUrl).hostname.replace(/^www\./, "");
   const passages: AnswerPassage[] = [];
-  let structuredListsCount = 0;
-  let tablesCount = 0;
+  const schemaTypes = new Set<string>();
+  const outboundDomains = new Set<string>();
+  let totalWords = 0;
+  let titleDescriptionPages = 0;
+  let headingPages = 0;
+  let canonicalPages = 0;
+  let indexablePages = 0;
+  let lists = 0;
+  let tables = 0;
   let brandEntityFound = false;
   let categoryDeclared = false;
   let clearValueProp = false;
-  let totalWords = 0;
-  const discoveredExternalDomains = new Set<string>();
 
-  for (const page of crawlPages) {
-    if (!page.content) continue;
-    const wordCount = page.content.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
-    totalWords += wordCount;
+  for (const page of pages) {
+    const $ = cheerio.load(page.html);
+    const title = clean($("title").first().text());
+    const description = clean($('meta[name="description"]').attr("content") ?? "");
+    if (title && description) titleDescriptionPages++;
+    if ($("h1").filter((_, element) => Boolean(clean($(element).text()))).length) headingPages++;
+    if ($('link[rel="canonical"][href]').length) canonicalPages++;
+    const robots = [
+      $('meta[name="robots"]').attr("content") ?? "",
+      $('meta[name="googlebot"]').attr("content") ?? "",
+    ].join(",").toLowerCase();
+    if (!/(?:^|[,\s])noindex(?:[,\s]|$)/.test(robots)) indexablePages++;
 
-    const $ = cheerio.load(page.content);
-
-    // Count structured elements
-    const lists = $("ul, ol").length;
-    const tables = $("table").length;
-    structuredListsCount += lists;
-    tablesCount += tables;
-
-    // Discover external reference links on page
-    $("a[href]").each((_, el) => {
-      const href = $(el).attr("href") || "";
-      if (href.startsWith("http")) {
-        try {
-          const parsed = new URL(href);
-          const domain = parsed.hostname.replace(/^www\./, "");
-          if (!domain.includes(cleanHost) && domain.includes(".")) {
-            discoveredExternalDomains.add(domain);
+    $("script[type='application/ld+json']").each((_, element) => {
+      try {
+        const parsed: unknown = JSON.parse($(element).html() ?? "");
+        if (!hasSchemaContext(parsed)) return;
+        for (const item of schemaItems(parsed)) {
+          const value = item["@type"];
+          for (const type of Array.isArray(value) ? value : [value]) {
+            if (typeof type === "string" && type.trim()) schemaTypes.add(type.trim());
           }
-        } catch {}
-      }
+        }
+      } catch { /* Invalid JSON-LD is not counted as evidence. */ }
     });
 
-    let pagePath = "/";
-    try {
-      const parsed = new URL(page.url);
-      pagePath = parsed.pathname || "/";
-      if (pagePath === "/") pagePath = "/ (homepage)";
-    } catch {}
+    $("a[href]").each((_, element) => {
+      try {
+        const destination = new URL($(element).attr("href") ?? "", page.url);
+        const host = destination.hostname.replace(/^www\./, "");
+        if (destination.protocol.startsWith("http") && host !== officialHost) outboundDomains.add(host);
+      } catch { /* Ignore malformed links. */ }
+    });
 
-    // Check heading and passage patterns
+    $("script, style, noscript, svg, canvas, iframe, template, nav, footer").remove();
+    lists += $("main ul, main ol, article ul, article ol").length;
+    tables += $("main table, article table").length;
+    const bodyText = clean($("main").first().text() || $("body").text());
+    totalWords += wordCount(bodyText);
+    if (bodyText.toLowerCase().includes(brand)) brandEntityFound = true;
+    if (category && bodyText.toLowerCase().includes(category)) categoryDeclared = true;
+
     $("h1, h2, h3").each((_, element) => {
-      const heading = $(element).text().trim();
-      if (!heading || heading.length < 5 || heading.length > 120) return;
-
-      const headingLower = heading.toLowerCase();
-      if (headingLower.includes(brandName)) brandEntityFound = true;
-      if (headingLower.includes(categoryName.toLowerCase())) categoryDeclared = true;
-
-      // Extract next paragraph or content block
-      const nextP = $(element).next("p").text().trim() || $(element).next("div").find("p").first().text().trim();
-      if (nextP && nextP.length >= 35 && nextP.length <= 480) {
-        let type: AnswerPassage["type"] = "definition";
-        let score = 72;
-
-        if (/^(how|steps|guide|ways|process)/i.test(headingLower) || $(element).next("ol, ul").length > 0) {
-          type = "procedure";
-          score = 84;
-        } else if (/^(vs|difference|compare|alternative|why)/i.test(headingLower) || $(element).next("table").length > 0) {
-          type = "comparison";
-          score = 90;
-        } else if (/\?$/.test(heading)) {
-          type = "faq";
-          score = 88;
-        }
-
-        if (nextP.toLowerCase().includes(brandName)) {
-          score = Math.min(99, score + 8);
-          clearValueProp = true;
-        }
-
-        let query = heading.replace(/^[#0-9.\s]+/, "").trim();
-        if (!query.includes("?") && type === "faq") query = `${query}?`;
-
-        passages.push({
-          heading,
-          passage: nextP,
-          type,
-          citabilityScore: score,
-          sourceUrl: page.url,
-          path: pagePath,
-          query: query.toLowerCase(),
-          monthlyAiVolume: "Not measured",
-        });
-      }
+      const heading = clean($(element).text());
+      if (heading.length < 6 || heading.length > 140) return;
+      const sibling = $(element).next();
+      const paragraph = clean(
+        sibling.is("p") ? sibling.text() :
+        sibling.find("p").first().text(),
+      );
+      const words = wordCount(paragraph);
+      if (words < 12 || words > 130) return;
+      const lower = paragraph.toLowerCase();
+      if (lower.includes(brand) && /\b(is|are|helps?|provides?|offers?|enables?|builds?)\b/.test(lower)) clearValueProp = true;
+      const type = passageType(heading);
+      passages.push({
+        heading,
+        passage: paragraph,
+        type,
+        sourceUrl: page.url,
+        path: new URL(page.url).pathname || "/",
+        query: heading,
+        wordCount: words,
+      });
     });
   }
 
-  // Deduplicate and rank top answer passages
-  const topPassages = passages
-    .sort((a, b) => b.citabilityScore - a.citabilityScore)
-    .slice(0, 8);
+  const uniquePassages = [...new Map(passages.map((passage) => [`${passage.sourceUrl}:${passage.heading}:${passage.passage}`, passage])).values()].slice(0, 20);
+  const total = pages.length;
+  const check = (id: string, label: string, matched: number, detail: string): AeoCheck => ({
+    id, label, status: total === 0 ? "unknown" : matched === total ? "pass" : "fail", detail,
+  });
+  const checks: AeoCheck[] = [
+    check("metadata", "Titles and descriptions", titleDescriptionPages, `${titleDescriptionPages} of ${total} pages have both`),
+    check("headings", "Page H1 headings", headingPages, `${headingPages} of ${total} pages have an H1`),
+    check("canonical", "Canonical links", canonicalPages, `${canonicalPages} of ${total} pages declare a canonical URL`),
+    check("indexability", "On-page indexability", indexablePages, `${indexablePages} of ${total} pages have no meta noindex`),
+    { id: "answers", label: "Direct answer passages", status: total === 0 ? "unknown" : uniquePassages.length > 0 ? "pass" : "fail", detail: `${uniquePassages.length} heading-and-answer pairs extracted` },
+    { id: "schema", label: "Schema.org JSON-LD", status: total === 0 ? "unknown" : schemaTypes.size > 0 ? "pass" : "fail", detail: schemaTypes.size ? [...schemaTypes].join(", ") : "No parseable Schema.org JSON-LD found" },
+    ...supportingChecks,
+  ];
 
-  // Calculate real entity & signal scores
-  let activeSignals = 0;
-  if (brandEntityFound || Boolean(company.name)) activeSignals++;
-  if (categoryDeclared || Boolean(company.category)) activeSignals++;
-  if (clearValueProp || Boolean(company.description)) activeSignals++;
-  if (structuredListsCount > 0) activeSignals++;
-  if (tablesCount > 0) activeSignals++;
-  if (crawlPages.length >= 3) activeSignals++;
-
-  let entityClarityScore = 55;
-  if (brandEntityFound) entityClarityScore += 18;
-  if (categoryDeclared || Boolean(company.category)) entityClarityScore += 15;
-  if (clearValueProp || Boolean(company.description)) entityClarityScore += 12;
-  entityClarityScore = Math.min(100, entityClarityScore);
-
-  const avgPassageScore = topPassages.length > 0 ? topPassages.reduce((sum, p) => sum + p.citabilityScore, 0) / topPassages.length : 60;
-  const structuredScore = Math.min(100, Math.round(structuredListsCount * 8 + tablesCount * 18 + 40));
-
-  // Platform Readiness breakdown
-  const chatgptScore = Math.min(100, Math.max(50, Math.round(entityClarityScore * 0.45 + avgPassageScore * 0.35 + (clearValueProp ? 15 : 5))));
-  const perplexityScore = Math.min(100, Math.max(45, Math.round((tablesCount > 0 ? 30 : 10) + avgPassageScore * 0.45 + entityClarityScore * 0.25)));
-  const geminiScore = Math.min(100, Math.max(50, Math.round(entityClarityScore * 0.5 + structuredScore * 0.3 + 15)));
-  const copilotScore = Math.min(100, Math.max(40, Math.round(entityClarityScore * 0.35 + (tablesCount > 0 ? 25 : 10) + avgPassageScore * 0.35)));
-
-  const platformComposite = Math.round((chatgptScore + perplexityScore + geminiScore + copilotScore) / 4);
-
-  const aiVisibility = Math.min(100, Math.round(entityClarityScore * 0.6 + avgPassageScore * 0.4));
-  const readinessScore = Math.min(100, Math.round(platformComposite * 0.5 + structuredScore * 0.3 + (crawlPages.length >= 5 ? 20 : 10)));
-  const technicalGeoScore = Math.min(100, Math.max(42, Math.round(structuredScore * 0.5 + (crawlPages.length >= 4 ? 30 : 15) + (brandEntityFound ? 20 : 5))));
-  const backlinkAuthorityScore = Math.min(100, discoveredExternalDomains.size * 10);
-
-  const geoScore = Math.min(98, Math.max(45, Math.round(
-    aiVisibility * 0.25 +
-    platformComposite * 0.35 +
-    technicalGeoScore * 0.20 +
-    backlinkAuthorityScore * 0.20
-  )));
-
-  // Citation domains require a connected citation/referral data source. The crawl
-  // only exposes outbound links, so do not present them as verified citations.
-  const citationSources: CitationSource[] = [];
-
-  let citationReadinessStage: GeoCitabilityReport["citationReadinessStage"] = "Initial Discovery";
-  if (geoScore >= 82) citationReadinessStage = "High Authority Citations";
-  else if (geoScore >= 68) citationReadinessStage = "Answer Engine Ready";
-  else if (geoScore >= 50) citationReadinessStage = "Entity Defined";
-
+  const readinessScore = total === 0 ? null : Math.round(100 * (
+    (titleDescriptionPages / total) * 0.15 +
+    (headingPages / total) * 0.15 +
+    (canonicalPages / total) * 0.10 +
+    (indexablePages / total) * 0.15 +
+    Math.min(1, uniquePassages.length / Math.max(2, total)) * 0.25 +
+    (schemaTypes.size > 0 ? 0.15 : 0) +
+    (lists + tables > 0 ? 0.05 : 0)
+  ));
+  const citationReadinessStage = readinessScore === null ? "Insufficient evidence" : readinessScore >= 75 ? "Ready for review" : readinessScore >= 45 ? "Developing" : "Foundational";
   const strategicActions: string[] = [];
-  if (topPassages.length < 4) {
-    strategicActions.push("Structure 2–3 explicit Q&A answer passages with 40–80 word direct answer definitions under H2 question headings.");
-  }
-  if (tablesCount === 0) {
-    strategicActions.push("Add comparison and feature-matrix HTML tables — AI models like ChatGPT and Perplexity prioritize tabular data.");
-  }
-  if (!brandEntityFound) {
-    strategicActions.push(`Include explicit entity definitions: '${company.name} is a [Category] that [Core Benefit]' in top-level H1/H2 headings.`);
-  }
-  strategicActions.push("Ensure Schema.org Organization markup connects official social profiles (sameAs) for entity verification.");
-
-  const totalAuditedWordsFormatted = totalWords > 1000 ? `${(totalWords / 1000).toFixed(1)}K` : `${totalWords}`;
-  const aiImpressionIndex = "Not measured";
-  const aiSearchVolume = "Not measured";
+  if (total === 0) strategicActions.push("Retry the live scan after confirming the website is reachable.");
+  if (total > 0 && uniquePassages.length === 0) strategicActions.push("Add concise answers beneath descriptive H2 headings on your key pages.");
+  if (total > 0 && titleDescriptionPages < total) strategicActions.push("Add unique page titles and meta descriptions to the pages missing them.");
+  if (total > 0 && headingPages < total) strategicActions.push("Add a clear H1 heading to each page missing one.");
+  if (total > 0 && canonicalPages < total) strategicActions.push("Declare canonical URLs on the pages missing them.");
+  if (total > 0 && indexablePages < total) strategicActions.push("Review noindex directives on public pages you want discovered.");
+  if (total > 0 && schemaTypes.size === 0) strategicActions.push("Publish valid Organization or product/service JSON-LD where the facts are verified.");
+  for (const item of supportingChecks) if (item.status === "fail") strategicActions.push(item.detail);
 
   return {
-    geoScore,
-    overallCitabilityScore: geoScore,
-    activeSignalsCount: activeSignals,
-    aiVisibility,
-    platformReadiness: {
-      composite: platformComposite,
-      chatgpt: chatgptScore,
-      perplexity: perplexityScore,
-      gemini: geminiScore,
-      copilot: copilotScore,
-    },
     readinessScore,
-    technicalGeoScore,
-    backlinkAuthorityScore,
-    answerPassages: topPassages,
-    citationSources,
-    entitySignals: {
-      brandEntityFound,
-      categoryDeclared: categoryDeclared || Boolean(company.category),
-      clearValueProp: clearValueProp || Boolean(company.description),
-      structuredListsCount,
-      tablesCount,
-      externalReferenceDomains: discoveredExternalDomains.size,
-      totalAuditedPages: crawlPages.length,
-      totalAuditedWords: totalWords,
-    },
-    aggregateStats: {
-      citablePassagesCount: topPassages.length,
-      aiImpressionIndex,
-      aiSearchVolume,
-      totalAuditedWordsFormatted,
-    },
     citationReadinessStage,
-    strategicActions: strategicActions.slice(0, 3),
+    answerPassages: uniquePassages,
+    checks,
+    entitySignals: {
+      totalAuditedPages: total,
+      totalAuditedWords: totalWords,
+      brandEntityFound,
+      categoryDeclared,
+      clearValueProp,
+      structuredListsCount: lists,
+      tablesCount: tables,
+      externalReferenceDomains: outboundDomains.size,
+      schemaTypes: [...schemaTypes],
+      titleDescriptionPages,
+      headingPages,
+      canonicalPages,
+      indexablePages,
+    },
+    strategicActions: strategicActions.slice(0, 6),
   };
 }

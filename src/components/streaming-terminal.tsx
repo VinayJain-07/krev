@@ -96,7 +96,7 @@ export function StreamingTerminal({
           {tokenCount > 0 && (
             <div className="terminal-stat-pill" title="Tokens consumed this session">
               <Cpu size={12} />
-              <span>{tokenCount.toLocaleString()} tkn</span>
+              <span>{tokenCount.toLocaleString("en-US")} tkn</span>
             </div>
           )}
 

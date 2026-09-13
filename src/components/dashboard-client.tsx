@@ -1121,7 +1121,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
             <button type="button" className="run-fresh-btn" onClick={() => void lighthouse.startAudit(true)} disabled={lighthouse.status === "queued" || lighthouse.status === "running"} aria-label="Run a fresh audit" title="Run a fresh audit"><RotateCcw size={12} /></button>
           </div>}
           <div className="analytics-tabs">
-            {(["health", "links", "technical", "aigeo"] as const).map((tabName) => <button key={tabName} className={analysisTab === tabName ? "active" : ""} onClick={() => setAnalysisTab(tabName)}>{tabName === "aigeo" ? "AI/GEO" : tabName.slice(0, 1).toUpperCase() + tabName.slice(1)}</button>)}
+            {(["health", "links", "technical", "aigeo"] as const).map((tabName) => <button key={tabName} className={analysisTab === tabName ? "active" : ""} onClick={() => setAnalysisTab(tabName)}>{tabName === "aigeo" ? "AEO / GEO" : tabName.slice(0, 1).toUpperCase() + tabName.slice(1)}</button>)}
           </div>
           {analysisTab === "health" && <div className="analytics-health-section">
             {(lighthouse.status === "queued" || lighthouse.status === "running") && <AuditSkeleton status={lighthouse.status} />}
@@ -1232,99 +1232,13 @@ export function DashboardClient({ data }: { data: DashboardData }) {
           )}
           {analysisTab === "aigeo" && (
             <AnalyticsGeoView
+              companyId={data.company.id}
               companyName={data.company.name}
               websiteUrl={data.company.websiteUrl}
-              category={data.company.category}
-              description={data.company.description}
-              crawlPages={data.crawlPages.map((page) => ({ url: page.url, title: page.title, description: page.description, content: page.content || "" }))}
               geoSummary={geoRun?.summary}
             />
           )}
-          {analysisTab === "health" && (
-            <details className="health-checks-disclosure">
-              <summary><span>Site checks</span><span>6 verified signals</span></summary>
-              <div className="analytics-checks-section">
-              <div className="source-banner aeo-banner">
-                <div>
-                  <Sparkles size={18} />
-                  <span>
-                    <strong>Diagnostic Engine &amp; Health Checks</strong>
-                    <small>Real-time verification of on-page, robots, schema &amp; crawlability</small>
-                  </span>
-                </div>
-                <span className="source-status evidence-badge">Verified</span>
-              </div>
 
-              <div className="checks-list-wrapper margin-top">
-                <div className="check-item-row pass">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot pass"><CheckCircle2 size={13} /></span>
-                    <div>
-                      <strong>Semantic HTML &amp; Heading Hierarchy</strong>
-                      <small>Clean single H1 tag, nested H2/H3 tags, and valid meta viewport detected</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag pass">Passed</span>
-                </div>
-
-                <div className="check-item-row pass">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot pass"><CheckCircle2 size={13} /></span>
-                    <div>
-                      <strong>AI Crawler &amp; Robots.txt Access</strong>
-                      <small>GPTBot, PerplexityBot, ClaudeBot, and Google-Extended allowed for citation discovery</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag pass">Allowed</span>
-                </div>
-
-                <div className="check-item-row pass">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot pass"><CheckCircle2 size={13} /></span>
-                    <div>
-                      <strong>XML Sitemap &amp; Canonical Route Integrity</strong>
-                      <small>XML sitemap valid and canonical URLs match indexed host structure</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag pass">Verified</span>
-                </div>
-
-                <div className="check-item-row warn">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot warn"><AlertTriangle size={13} /></span>
-                    <div>
-                      <strong>JSON-LD Schema &amp; Entity Markup</strong>
-                      <small>Organization schema active; Product/FAQPage schema recommended for enhanced AI snippets</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag warn">Partial</span>
-                </div>
-
-                <div className="check-item-row pass">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot pass"><CheckCircle2 size={13} /></span>
-                    <div>
-                      <strong>Mobile Viewport &amp; Responsive Layout</strong>
-                      <small>Touch targets meet minimum 48px standard with zero horizontal overflow</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag pass">100% Mobile Ready</span>
-                </div>
-
-                <div className="check-item-row pass">
-                  <div className="check-item-info">
-                    <span className="check-icon-dot pass"><CheckCircle2 size={13} /></span>
-                    <div>
-                      <strong>SSL / TLS &amp; HTTP Security Headers</strong>
-                      <small>Valid 256-bit encryption certificate and Strict-Transport-Security active</small>
-                    </div>
-                  </div>
-                  <span className="check-status-tag pass">Secure</span>
-                </div>
-              </div>
-              </div>
-            </details>
-          )}
         </div>
         {paneResizer("analytics")}
       </section>
