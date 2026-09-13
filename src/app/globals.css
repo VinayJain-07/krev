@@ -14353,3 +14353,69 @@ html[data-theme="dark"] .geo-snapshot-row { border-color: #363132; }
 html[data-theme="dark"] .geo-snapshot-row a { color: #a1d7dd; }
 html[data-theme="dark"] .geo-snapshot-row p { color: #ded8d3; }
 html[data-theme="dark"] .geo-snapshot-row small { color: #aaa3a0; }
+
+/* Cosmic authentication layout, shared by sign-in and account creation. */
+.auth-shell.auth-cosmic,
+html[data-theme="dark"] .auth-shell.auth-cosmic {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 100svh;
+  padding: 24px;
+  overflow: hidden;
+  color: #f8f6ff;
+  background: #0e0a1a url("/images/auth-nebula-v2.png") center center / cover no-repeat;
+}
+.auth-cosmic-header { position: absolute; z-index: 2; top: 24px; left: 32px; }
+.auth-cosmic-header .brand { color: #f9f7ff; font-size: 15px; text-shadow: 0 2px 16px rgba(0,0,0,.7); }
+.auth-cosmic-header .brand-mark { width: 27px; height: 27px; box-shadow: 0 0 18px rgba(178,94,255,.48); }
+.auth-cosmic .auth-card-wrap { min-height: calc(100svh - 48px); padding: 24px 0 56px; }
+.auth-cosmic .auth-card-wrap::before { display: none; }
+.auth-cosmic .auth-card,
+html[data-theme="dark"] .auth-cosmic .auth-card {
+  width: min(370px, 100%);
+  padding: 34px 31px 30px;
+  border: 1px solid rgba(185,131,222,.62);
+  border-radius: 26px;
+  color: #f8f6ff;
+  background: rgba(20,16,34,.78);
+  box-shadow: 0 28px 90px rgba(4,1,12,.62), 0 0 65px rgba(129,37,207,.18), inset 0 1px 0 rgba(255,255,255,.13);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.auth-cosmic .auth-card-symbol { width: 52px; height: 52px; margin: 0 auto 19px; display: grid; place-items: center; border: 1px solid rgba(206,165,239,.32); border-radius: 15px; color: #f4e8ff; background: rgba(201,155,241,.12); box-shadow: 0 5px 22px rgba(147,59,231,.25), inset 0 1px 0 rgba(255,255,255,.12); }
+.auth-cosmic .auth-card h1 { margin: 0; color: #fff; font-size: 21px; font-weight: 720; letter-spacing: -.025em; line-height: 1.25; text-align: center; }
+.auth-cosmic .form-intro,
+html[data-theme="dark"] .auth-cosmic .form-intro { max-width: 290px; margin: 6px auto 20px; color: #c9c1d5; font-size: 13px; line-height: 1.45; text-align: center; }
+.auth-cosmic .auth-form { display: grid; gap: 9px; }
+.auth-cosmic .auth-field { min-width: 0; }
+.auth-cosmic .auth-field label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.auth-cosmic .auth-input-wrap { height: 42px; padding: 0 11px; display: flex; align-items: center; gap: 9px; border: 1px solid rgba(190,176,211,.22); border-radius: 10px; color: #bdb3ce; background: rgba(244,238,255,.105); box-shadow: inset 0 1px 2px rgba(255,255,255,.05); transition: border-color .2s, box-shadow .2s, background .2s; }
+.auth-cosmic .auth-input-wrap:focus-within { border-color: #bc63ff; background: rgba(244,238,255,.14); box-shadow: 0 0 0 3px rgba(170,69,246,.2), 0 0 18px rgba(158,50,239,.18); }
+.auth-cosmic .auth-input-wrap > svg { flex: 0 0 auto; }
+.auth-cosmic .auth-input-wrap input { width: 100%; height: 100%; min-width: 0; padding: 0; border: 0; outline: 0; border-radius: 0; color: #fff; background: transparent; font-size: 13px; box-shadow: none; }
+.auth-cosmic .auth-input-wrap input:focus { border: 0; box-shadow: none; }
+.auth-cosmic .auth-input-wrap input::placeholder { color: #c0b6d0; opacity: 1; }
+.auth-cosmic .auth-input-wrap input:-webkit-autofill { -webkit-box-shadow: 0 0 0 1000px #292239 inset !important; -webkit-text-fill-color: #fff !important; }
+.auth-cosmic .auth-password-toggle { width: 25px; height: 28px; padding: 0; display: grid; place-items: center; flex: 0 0 auto; border: 0; border-radius: 6px; color: #c0b6d0; background: transparent; cursor: pointer; }
+.auth-cosmic .auth-password-toggle:hover, .auth-cosmic .auth-password-toggle:focus-visible { color: #fff; background: rgba(255,255,255,.1); }
+.auth-cosmic .auth-form .primary-button { height: 43px; margin-top: 12px; border: 1px solid #b65afe; border-radius: 10px; color: #fff; background: rgba(23,16,37,.9); font-size: 13px; font-weight: 700; box-shadow: 0 0 0 1px rgba(190,86,255,.18), 0 0 17px rgba(168,39,255,.58), inset 0 1px 0 rgba(255,255,255,.13); }
+.auth-cosmic .auth-form .primary-button:hover { transform: translateY(-1px); background: #7122ac; box-shadow: 0 0 24px rgba(182,77,255,.75); }
+.auth-cosmic .auth-form .primary-button:focus-visible, .auth-cosmic .auth-form .secondary-button:focus-visible, .auth-cosmic .auth-switch a:focus-visible { outline: 2px solid #d9a2ff; outline-offset: 3px; }
+.auth-cosmic .auth-social-divider { margin: 8px 0 0; border-top: 1px dashed rgba(196,178,215,.3); color: #b8acc9; font-size: 11px; text-align: center; }
+.auth-cosmic .auth-social-divider span { position: relative; top: -8px; padding: 0 8px; background: #1a142b; }
+.auth-cosmic .auth-form .secondary-button { height: 40px; margin: -2px 0 0; border: 1px solid rgba(190,176,211,.23); border-radius: 10px; color: #f8f6ff; background: rgba(244,238,255,.1); font-size: 12px; }
+.auth-cosmic .auth-form .secondary-button:hover { border-color: #b65afe; background: rgba(165,87,230,.2); }
+.auth-cosmic .auth-switch { margin: 12px 0 0; color: #c8bfd3; font-size: 11px; }
+.auth-cosmic .auth-switch a { color: #e3b8ff; text-decoration: none; }
+.auth-cosmic .auth-switch a:hover { text-decoration: underline; }
+.auth-cosmic .form-error { margin: 1px 0 0; padding: 9px 10px; border: 1px solid rgba(252,142,157,.46); border-radius: 8px; color: #ffd7dc; background: rgba(111,25,42,.48); font-size: 11px; }
+@media (max-width: 520px) {
+  .auth-shell.auth-cosmic { padding: 16px; background-position: center; }
+  .auth-cosmic-header { top: 18px; left: 19px; }
+  .auth-cosmic .auth-card-wrap { min-height: calc(100svh - 32px); padding: 67px 0 22px; }
+  .auth-cosmic .auth-card { padding: 27px 22px 24px; border-radius: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .auth-cosmic .auth-input-wrap, .auth-cosmic .auth-form .primary-button { transition: none; }
+}
