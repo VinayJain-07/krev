@@ -14363,13 +14363,30 @@ html[data-theme="dark"] .auth-shell.auth-cosmic {
   min-height: 100svh;
   padding: 24px;
   overflow: hidden;
+  isolation: isolate;
   color: #f8f6ff;
-  background: #0e0a1a url("/images/auth-nebula-v2.png") center center / cover no-repeat;
+  background: #0e0a1a;
+}
+.auth-cosmic::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: -4%;
+  pointer-events: none;
+  background: url("/images/auth-nebula-v2.png") center center / cover no-repeat;
+  opacity: .78;
+  filter: brightness(.82) saturate(.78);
+  animation: auth-nebula-drift 36s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes auth-nebula-drift {
+  from { transform: translate3d(-1.5%, -.8%, 0) scale(1.025); }
+  to { transform: translate3d(1.5%, .8%, 0) scale(1.06); }
 }
 .auth-cosmic-header { position: absolute; z-index: 2; top: 24px; left: 32px; }
 .auth-cosmic-header .brand { color: #f9f7ff; font-size: 15px; text-shadow: 0 2px 16px rgba(0,0,0,.7); }
 .auth-cosmic-header .brand-mark { width: 27px; height: 27px; box-shadow: 0 0 18px rgba(178,94,255,.48); }
-.auth-cosmic .auth-card-wrap { min-height: calc(100svh - 48px); padding: 24px 0 56px; }
+.auth-cosmic .auth-card-wrap { z-index: 1; min-height: calc(100svh - 48px); padding: 24px 0 56px; }
 .auth-cosmic .auth-card-wrap::before { display: none; }
 .auth-cosmic .auth-card,
 html[data-theme="dark"] .auth-cosmic .auth-card {
@@ -14411,11 +14428,12 @@ html[data-theme="dark"] .auth-cosmic .form-intro { max-width: 290px; margin: 6px
 .auth-cosmic .auth-switch a:hover { text-decoration: underline; }
 .auth-cosmic .form-error { margin: 1px 0 0; padding: 9px 10px; border: 1px solid rgba(252,142,157,.46); border-radius: 8px; color: #ffd7dc; background: rgba(111,25,42,.48); font-size: 11px; }
 @media (max-width: 520px) {
-  .auth-shell.auth-cosmic { padding: 16px; background-position: center; }
+  .auth-shell.auth-cosmic { padding: 16px; }
   .auth-cosmic-header { top: 18px; left: 19px; }
   .auth-cosmic .auth-card-wrap { min-height: calc(100svh - 32px); padding: 67px 0 22px; }
   .auth-cosmic .auth-card { padding: 27px 22px 24px; border-radius: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
+  .auth-cosmic::before { animation: none; transform: none; }
   .auth-cosmic .auth-input-wrap, .auth-cosmic .auth-form .primary-button { transition: none; }
 }
