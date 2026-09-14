@@ -10,21 +10,11 @@ import { SpecialistAgentsFlipper } from "@/components/specialist-agents-flipper"
 import { ComparisonMatrix } from "@/components/comparison-matrix";
 import Link from "next/link";
 import {
-  Sparkles,
   ArrowRight,
   Shield,
   Zap,
   Layers,
-  Search,
-  Users,
-  Compass,
-  FileText,
-  BarChart3,
-  Bot,
   CheckCircle2,
-  ChevronDown,
-  Globe,
-  Lock,
 } from "lucide-react";
 
 export default async function Home() {
@@ -127,30 +117,30 @@ export default async function Home() {
         <div className="mx-auto max-w-5xl">
           <div className="text-center mb-12">
             <span className="text-xs font-medium uppercase tracking-[0.16em] text-purple-400">
-              RESEARCH & BENCHMARKS
+              PRACTICAL GUIDES
             </span>
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.01em] text-white sm:text-4xl">
-              Insights, Research &amp; Proven Playbooks
+              Guides for Evidence-Led Marketing
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm font-normal text-slate-400 tracking-[0.012em]">
-              Quantitative data and operational frameworks on modern generative engine optimization.
+              Clear methods, illustrative examples, and practical exercises for modern marketing teams.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="rounded-2xl border border-purple-500/30 bg-gradient-to-br from-purple-950/20 to-black/60 p-7 backdrop-blur-lg">
               <div className="flex items-center justify-between">
-                <span className="rounded-full bg-purple-500/20 px-3 py-1 text-[10px] font-semibold text-purple-300 uppercase tracking-wider">Featured Whitepaper</span>
-                <span className="text-xs text-purple-400 font-medium">+310% AI Citation Index</span>
+                <span className="rounded-full bg-purple-500/20 px-3 py-1 text-[10px] font-semibold text-purple-300 uppercase tracking-wider">Generative Search Guide</span>
+                <span className="text-xs text-purple-400 font-medium">Framework + Exercise</span>
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-white">The Shift from Search to Synthesis: Benchmarking GEO in 2026</h3>
+              <h3 className="mt-4 text-xl font-semibold text-white">How to Measure Generative Search Visibility</h3>
               <p className="mt-2 text-sm text-slate-300/85 leading-relaxed tracking-[0.012em]">
-                Quantitative research analyzing how ChatGPT, Perplexity, Claude, and Gemini resolve brand authority compared to legacy search engines, introducing our 8-layer entity clarity framework.
+                Build a repeatable query set, record citations and brand mentions, and turn missing answers into a focused editorial backlog.
               </p>
               <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-slate-400">
-                <span>0.84 Vector Correlation</span>
-                <Link href="/docs" className="text-purple-300 font-medium hover:underline inline-flex items-center gap-1">
-                  Read whitepaper <ArrowRight className="size-3" />
+                <span>Includes an illustrative example</span>
+                <Link href="/blog/the-shift-from-search-to-synthesis-benchmarking-geo-in-2026" className="text-purple-300 font-medium hover:underline inline-flex items-center gap-1">
+                  Read guide <ArrowRight className="size-3" />
                 </Link>
               </div>
             </div>
@@ -158,16 +148,16 @@ export default async function Home() {
             <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-lg">
               <div className="flex items-center justify-between">
                 <span className="rounded-full bg-slate-500/20 px-3 py-1 text-[10px] font-semibold text-slate-300 uppercase tracking-wider">Intent Playbook</span>
-                <span className="text-xs text-slate-300 font-medium">100-Pt Lead Scale</span>
+                <span className="text-xs text-slate-300 font-medium">Research Workflow</span>
               </div>
-              <h3 className="mt-4 text-xl font-semibold text-white">Commercial Intent Lead Mining: Scoring Social Signals into B2B Pipeline</h3>
+              <h3 className="mt-4 text-xl font-semibold text-white">Turning Public Buying Signals into a B2B Research Workflow</h3>
               <p className="mt-2 text-sm text-slate-300/85 leading-relaxed tracking-[0.012em]">
-                Operational guide for tracking active buying intent across Reddit, X, and LinkedIn. Learn how 100-point intent algorithms isolate qualified buyers before form fills.
+                Distinguish active evaluation from general chatter, qualify the context, and respond in a way that helps the buyer.
               </p>
               <div className="mt-6 flex items-center justify-between border-t border-white/10 pt-4 text-xs text-slate-400">
-                <span>90+ Pts Priority Outbound</span>
-                <Link href="/docs" className="text-purple-300 font-medium hover:underline inline-flex items-center gap-1">
-                  Read playbook <ArrowRight className="size-3" />
+                <span>Includes a qualification rubric</span>
+                <Link href="/blog/commercial-intent-mining-turning-social-signals-into-b2b-pipeline" className="text-purple-300 font-medium hover:underline inline-flex items-center gap-1">
+                  Read guide <ArrowRight className="size-3" />
                 </Link>
               </div>
             </div>

@@ -91,18 +91,18 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/blog/shift-from-search-to-synthesis-geo-2026" className="hover:text-white transition-colors">
-                    GEO & LLM Synthesis
+                  <Link href="/blog/the-shift-from-search-to-synthesis-benchmarking-geo-in-2026" className="hover:text-white transition-colors">
+                    Generative Search Visibility
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog/the-100-point-intent-lead-scoring-algorithm-a-technical-deep-dive" className="hover:text-white transition-colors">
-                    Intent Scoring Formula
+                    Intent Scoring Guide
                   </Link>
                 </li>
                 <li>
                   <Link href="/blog/entity-clarity-scoring-structuring-json-ld-for-chatgpt-perplexity" className="hover:text-white transition-colors">
-                    JSON-LD Entity Graphs
+                    Entity Clarity & JSON-LD
                   </Link>
                 </li>
                 <li>

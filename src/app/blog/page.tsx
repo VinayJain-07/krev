@@ -2,361 +2,153 @@
 
 import * as React from "react";
 import Link from "next/link";
+import { ArrowRight, BookOpen, Clock, Search, X } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
-import { BorderBeam } from "@/components/ui/border-beam";
-import { getAllBlogs, getAllCategories, BlogPost } from "@/lib/blogs";
-import { 
-  Search, 
-  ArrowRight, 
-  Clock, 
-  Sparkles, 
-  ExternalLink, 
-  BookOpen, 
-  TrendingUp, 
-  Layers, 
-  ShieldCheck,
-  CheckCircle2,
-  Filter
-} from "lucide-react";
+import { getAllBlogs, getAllCategories } from "@/lib/blogs";
 
 export default function BlogIndexPage() {
-  const allPosts = React.useMemo(() => getAllBlogs(), []);
-  const categories = React.useMemo(() => ["All", ...getAllCategories()], []);
+  const posts = React.useMemo(() => getAllBlogs(), []);
+  const categories = React.useMemo(() => ["All topics", ...getAllCategories()], []);
+  const [category, setCategory] = React.useState("All topics");
+  const [query, setQuery] = React.useState("");
 
-  const [selectedCategory, setSelectedCategory] = React.useState<string>("All");
-  const [searchQuery, setSearchQuery] = React.useState<string>("");
-
-  const filteredPosts = React.useMemo(() => {
-    return allPosts.filter((post) => {
-      const matchesCat =
-        selectedCategory === "All" ||
-        post.category.toLowerCase().includes(selectedCategory.toLowerCase());
-
-      const query = searchQuery.trim().toLowerCase();
-      if (!query) return matchesCat;
-
-      const matchesQuery =
-        post.title.toLowerCase().includes(query) ||
-        post.summary.toLowerCase().includes(query) ||
-        post.author.toLowerCase().includes(query) ||
-        post.metric.toLowerCase().includes(query) ||
-        post.tags.some((t) => t.toLowerCase().includes(query));
-
-      return matchesCat && matchesQuery;
+  const filtered = React.useMemo(() => {
+    const term = query.trim().toLowerCase();
+    return posts.filter((post) => {
+      const categoryMatches = category === "All topics" || post.category === category;
+      const textMatches = !term || [post.title, post.summary, post.takeaway, post.category, ...post.tags]
+        .some((value) => value.toLowerCase().includes(term));
+      return categoryMatches && textMatches;
     });
-  }, [allPosts, selectedCategory, searchQuery]);
+  }, [posts, category, query]);
 
-  const featuredPost = allPosts[0];
+  const featured = posts[0];
 
   return (
-    <div className="min-h-screen bg-[#07070a] text-slate-100 font-sans selection:bg-purple-600/30 selection:text-white">
-      {/* Top Header */}
+    <div className="min-h-screen bg-[#07070a] font-sans text-slate-100 selection:bg-violet-600/30 selection:text-white">
       <SiteHeader activeNav="blog" />
-
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-16 px-6 sm:px-8 lg:px-12 border-b border-white/10 overflow-hidden">
-        {/* Subtle Ambient Radial Glow */}
-        <div 
-          aria-hidden="true" 
-          className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-gradient-to-b from-purple-600/20 via-indigo-600/10 to-transparent blur-3xl" 
-        />
-
-        <div className="mx-auto max-w-5xl text-center relative z-10">
-          <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-950/40 px-4 py-1.5 text-xs font-semibold text-purple-300 backdrop-blur-md mb-6 shadow-inner">
-            <span className="flex size-2 rounded-full bg-purple-400 animate-pulse" />
-            <span className="tracking-wide">AI MARKETING & GEO RESEARCH LAB</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
-            Evidence for the{" "}
-            <span className="bg-gradient-to-r from-purple-400 via-indigo-300 to-white bg-clip-text text-transparent">
-              Generative Search Era
-            </span>
-          </h1>
-
-          <p className="mt-5 text-base sm:text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            16 in-depth architectural whitepapers, vector citation benchmarks, and marketing frameworks for enterprise growth teams and AI CMOs.
-          </p>
-
-          {/* Search & Filter Bar */}
-          <div className="mt-10 max-w-2xl mx-auto flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <BorderBeam
-                size="sm"
-                colorVariant="colorful"
-                borderRadius={16}
-                className="w-full"
-              >
-                <div className="group/field relative flex w-full items-center rounded-2xl border border-white/15 bg-[#0d0d16]/40 p-1 backdrop-blur-2xl transition-all hover:bg-[#0d0d16]/50 focus-within:border-purple-400/50 focus-within:bg-[#0d0d16]/60 shadow-[0_12px_40px_-10px_rgba(0,0,0,0.8),inset_0_1px_1px_rgba(255,255,255,0.08)]">
-                  <div className="pointer-events-none pl-3 pr-2 text-slate-400 flex items-center">
-                    <Search className="size-4 text-purple-400" />
-                  </div>
-                  <input
-                    type="text"
-                    placeholder="Search across 16 articles, metrics, topics..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="relative z-10 h-10 w-full flex-1 border-0 !bg-transparent px-2 text-sm text-white placeholder-slate-400 outline-none transition-all"
-                    style={{ backgroundColor: "transparent" }}
-                  />
-                  {searchQuery && (
-                    <button
-                      type="button"
-                      onClick={() => setSearchQuery("")}
-                      className="relative z-10 px-3 text-xs text-slate-400 hover:text-white cursor-pointer"
-                    >
-                      Clear
-                    </button>
-                  )}
-                </div>
-              </BorderBeam>
+      <main>
+        <section className="relative overflow-hidden border-b border-white/10 px-6 pb-14 pt-32 sm:px-8">
+          <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[-180px] h-[540px] w-[900px] -translate-x-1/2 rounded-full bg-violet-700/15 blur-[120px]" />
+          <div className="relative mx-auto max-w-6xl">
+            <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-violet-200">
+              <BookOpen className="size-3.5" /> Smark Connect Blog
             </div>
-          </div>
-
-          {/* Category Tabs */}
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-all ${
-                  selectedCategory === cat
-                    ? "bg-purple-600 text-white shadow-lg shadow-purple-600/30"
-                    : "border border-white/10 bg-white/[0.02] text-slate-400 hover:text-white hover:border-white/20"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Whitepaper Card (Shown when not filtering or when matches) */}
-      {!searchQuery && selectedCategory === "All" && (
-        <section className="py-12 px-6 sm:px-8 lg:px-12 border-b border-white/10">
-          <div className="mx-auto max-w-6xl">
-            <div className="flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-widest text-purple-400">
-              <Sparkles className="size-4" />
-              <span>FEATURED RESEARCH BENCHMARK</span>
-            </div>
-
-            <div className="relative rounded-3xl border border-purple-500/40 bg-gradient-to-br from-purple-950/30 via-white/[0.02] to-transparent p-8 md:p-12 backdrop-blur-xl shadow-2xl overflow-hidden group">
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                <div className="lg:col-span-8 flex flex-col justify-between">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2 mb-4 text-xs">
-                      <span className="rounded-full bg-purple-500/20 px-3 py-1 font-semibold text-purple-300 border border-purple-500/30">
-                        {featuredPost.category}
-                      </span>
-                      <span className="flex items-center gap-1 text-slate-400">
-                        <Clock className="size-3.5" />
-                        {featuredPost.readTime}
-                      </span>
-                    </div>
-
-                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white tracking-tight leading-snug group-hover:text-purple-200 transition-colors">
-                      <Link href={`/blog/${featuredPost.slug}`}>
-                        {featuredPost.title}
-                      </Link>
-                    </h2>
-
-                    <p className="mt-4 text-sm sm:text-base text-slate-300/90 leading-relaxed max-w-2xl">
-                      {featuredPost.summary}
-                    </p>
-                  </div>
-
-                  <div className="mt-8 flex flex-wrap items-center gap-6 pt-6 border-t border-white/10">
-                    <div>
-                      <p className="text-xs font-bold text-white">{featuredPost.author}</p>
-                      <p className="text-[11px] text-slate-400">{featuredPost.authorRole}</p>
-                    </div>
-
-                    <div className="rounded-xl border border-purple-500/30 bg-purple-950/40 px-3.5 py-1.5">
-                      <span className="text-[10px] uppercase font-bold text-purple-400 block">KEY FINDING</span>
-                      <span className="text-xs font-bold text-white">{featuredPost.metric}</span>
-                    </div>
-
-                    <Link
-                      href={`/blog/${featuredPost.slug}`}
-                      className="ml-auto inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-semibold text-black transition-all hover:bg-purple-100 active:scale-95 shadow-lg"
-                    >
-                      <span>Read Whitepaper</span>
-                      <ArrowRight className="size-3.5" />
-                    </Link>
-                  </div>
-                </div>
-
-                {/* Telemetry Visual Snippet */}
-                <div className="lg:col-span-4 rounded-2xl border border-white/10 bg-black/60 p-5 font-mono text-[11px] text-slate-300 shadow-inner">
-                  <div className="flex items-center justify-between pb-3 border-b border-white/10 text-xs text-purple-400">
-                    <span className="flex items-center gap-1.5 font-bold">
-                      <TrendingUp className="size-3.5" />
-                      LLM CITATION BENCHMARK
-                    </span>
-                    <span className="text-[10px] text-slate-500">2026 AUDIT</span>
-                  </div>
-                  <div className="mt-4 space-y-3">
-                    <div>
-                      <div className="flex justify-between text-[10px] text-slate-400 mb-1">
-                        <span>Keyword SEO</span>
-                        <span>14%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-white/10">
-                        <div className="h-1.5 rounded-full bg-rose-500" style={{ width: "14%" }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-[10px] text-slate-400 mb-1">
-                        <span>Basic Schema</span>
-                        <span>38%</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-white/10">
-                        <div className="h-1.5 rounded-full bg-amber-500" style={{ width: "38%" }} />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-[10px] text-purple-300 font-bold mb-1">
-                        <span>Smark 8-Layer Graph</span>
-                        <span>89% (+535%)</span>
-                      </div>
-                      <div className="h-1.5 w-full rounded-full bg-white/10">
-                        <div className="h-1.5 rounded-full bg-purple-500" style={{ width: "89%" }} />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-white/10 text-[10px] text-slate-500 flex items-center justify-between">
-                    <span>Source: Perplexity & ChatGPT Data</span>
-                    <span className="text-emerald-400">Verified</span>
-                  </div>
-                </div>
+            <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-end">
+              <div>
+                <h1 className="max-w-3xl text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                  Better marketing decisions start with <span className="bg-gradient-to-r from-violet-300 to-indigo-200 bg-clip-text text-transparent">clear evidence.</span>
+                </h1>
+                <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+                  In-depth guides to generative search, content, research, and marketing operations. Explore the methods, then try a hands-on lab inside every article.
+                </p>
               </div>
+              <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-5">
+                <span className="text-3xl font-bold text-white">{posts.length}</span>
+                <span className="ml-2 text-sm text-slate-400">field guides</span>
+                <div className="mt-4 h-px bg-white/10" />
+                <p className="mt-4 text-xs leading-6 text-slate-400">Focused on repeatable processes and transparent evidence, with illustrative diagrams clearly labeled.</p>
+              </div>
+            </div>
+
+            <div className="mt-11 flex flex-col gap-4 lg:flex-row lg:items-center">
+              <label className="relative block min-w-0 flex-1">
+                <span className="sr-only">Search articles</span>
+                <Search aria-hidden="true" className="absolute left-4 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search guides, topics, and frameworks"
+                  className="h-12 w-full rounded-xl border border-white/15 bg-white/[0.045] pl-11 pr-10 text-sm text-white outline-none placeholder:text-slate-500 focus:border-violet-400/50 focus:ring-2 focus:ring-violet-500/15"
+                />
+                {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear search" className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"><X className="size-4" /></button>}
+              </label>
+              <span className="text-xs text-slate-500">Find a question. Follow the method. Test the result.</span>
+            </div>
+            <div className="mt-5 flex flex-wrap gap-2" aria-label="Filter by topic">
+              {categories.map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={() => setCategory(item)}
+                  aria-pressed={category === item}
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition-colors ${category === item ? "bg-violet-500 text-white" : "border border-white/10 bg-white/[0.025] text-slate-400 hover:border-violet-400/30 hover:text-white"}`}
+                >
+                  {item}
+                </button>
+              ))}
             </div>
           </div>
         </section>
-      )}
 
-      {/* Catalog Grid of Articles */}
-      <section className="py-16 px-6 sm:px-8 lg:px-12">
-        <div className="mx-auto max-w-6xl">
-          <div className="flex items-center justify-between mb-8 pb-4 border-b border-white/10">
-            <div>
-              <h2 className="text-xl font-bold text-white">
-                {selectedCategory === "All" ? "All Research Articles" : selectedCategory}
-              </h2>
-              <p className="text-xs text-slate-400 mt-1">
-                Showing {filteredPosts.length} peer-reviewed marketing intelligence papers
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-slate-400">
-              <Filter className="size-3.5 text-purple-400" />
-              <span>High-DR Citations Included</span>
-            </div>
-          </div>
-
-          {filteredPosts.length === 0 ? (
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-12 text-center">
-              <BookOpen className="size-8 text-slate-600 mx-auto mb-3" />
-              <h3 className="text-base font-bold text-white">No articles found</h3>
-              <p className="text-xs text-slate-400 mt-1">
-                Try adjusting your search query or selecting a different category.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredPosts.map((post) => (
-                <article
-                  key={post.id}
-                  className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur-md hover:border-purple-500/40 hover:bg-white/[0.04] transition-all duration-300 flex flex-col justify-between group"
-                >
-                  <div>
-                    {/* Header meta */}
-                    <div className="flex items-center justify-between gap-2 mb-3 text-[11px]">
-                      <span className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-0.5 font-medium text-purple-300">
-                        {post.category.split("/")[0].trim()}
-                      </span>
-                      <span className="flex items-center gap-1 text-slate-400">
-                        <Clock className="size-3" />
-                        {post.readTime}
-                      </span>
-                    </div>
-
-                    {/* Title */}
-                    <h3 className="text-base font-bold text-white group-hover:text-purple-300 transition-colors leading-snug line-clamp-2">
-                      <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                    </h3>
-
-                    {/* Summary */}
-                    <p className="mt-2.5 text-xs text-slate-400 leading-relaxed line-clamp-3">
-                      {post.summary}
-                    </p>
-
-                    {/* Primary Metric Pill */}
-                    <div className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-purple-500/20 bg-purple-950/30 px-2.5 py-1 text-[11px] font-medium text-purple-300">
-                      <TrendingUp className="size-3 text-purple-400" />
-                      <span className="truncate max-w-[240px]">{post.metric}</span>
-                    </div>
-
-                    {/* External Citations Pill Preview */}
-                    {post.externalCitations && post.externalCitations.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-white/5 flex items-center gap-2 text-[10px] text-slate-400">
-                        <ShieldCheck className="size-3 text-emerald-400" />
-                        <span className="truncate">
-                          Cited sources: {post.externalCitations.map((c) => c.source.split(" ")[0]).join(", ")}
-                        </span>
+        {!query && category === "All topics" && featured && (
+          <section className="border-b border-white/10 px-6 py-14 sm:px-8">
+            <div className="mx-auto max-w-6xl">
+              <div className="mb-5 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-violet-300">
+                <span className="size-1.5 rounded-full bg-violet-400" /> Start here
+              </div>
+              <Link href={`/blog/${featured.slug}`} className="group grid overflow-hidden rounded-[28px] border border-violet-400/25 bg-gradient-to-br from-violet-950/40 via-[#10101b] to-[#0b0b11] transition-colors hover:border-violet-300/45 lg:grid-cols-2">
+                <div className="flex flex-col justify-center p-7 sm:p-10">
+                  <div className="flex items-center gap-3 text-xs text-violet-300"><span>{featured.category}</span><span aria-hidden="true">·</span><Clock className="size-3.5" />{featured.readTime}</div>
+                  <h2 className="mt-5 text-3xl font-bold leading-tight tracking-tight text-white group-hover:text-violet-100 sm:text-4xl">{featured.title}</h2>
+                  <p className="mt-5 max-w-xl text-sm leading-7 text-slate-300">{featured.summary}</p>
+                  <span className="mt-8 inline-flex items-center gap-2 text-sm font-semibold text-violet-300">Read the guide <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" /></span>
+                </div>
+                <div className="border-t border-white/10 bg-[#0c0c16] p-7 sm:p-9 lg:border-l lg:border-t-0">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">Framework preview</span>
+                  <h3 className="mt-2 text-lg font-semibold text-white">{featured.visual.title}</h3>
+                  <div className="mt-6 space-y-3">
+                    {featured.visual.steps.map((step, index) => (
+                      <div key={step.label} className="flex items-start gap-3 rounded-xl border border-white/10 bg-white/[0.035] p-3">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-violet-500/20 text-[11px] font-bold text-violet-200">{index + 1}</span>
+                        <div><strong className="block text-xs text-white">{step.label}</strong><span className="mt-1 block text-xs leading-5 text-slate-400">{step.detail}</span></div>
                       </div>
-                    )}
+                    ))}
                   </div>
-
-                  {/* Footer */}
-                  <div className="mt-6 pt-4 border-t border-white/10 flex items-center justify-between text-xs">
-                    <div>
-                      <p className="font-semibold text-slate-200 text-[11px]">{post.author}</p>
-                      <p className="text-[10px] text-slate-500">{post.date}</p>
-                    </div>
-                    <Link
-                      href={`/blog/${post.slug}`}
-                      className="inline-flex items-center gap-1 text-xs font-semibold text-purple-400 group-hover:text-purple-300 transition-colors"
-                    >
-                      <span>Read</span>
-                      <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </div>
-                </article>
-              ))}
+                  <p className="mt-5 text-[11px] leading-5 text-slate-500">{featured.visual.caption}</p>
+                </div>
+              </Link>
             </div>
-          )}
-        </div>
-      </section>
+          </section>
+        )}
 
-      {/* Conversion Banner */}
-      <section className="border-t border-white/10 bg-[#090910] py-20 px-6 sm:px-8 text-center">
-        <div className="mx-auto max-w-3xl">
-          <span className="text-xs font-bold uppercase tracking-widest text-purple-400">
-            APPLY THESE FRAMEWORKS TO YOUR DOMAIN
-          </span>
-          <h2 className="mt-4 text-3xl sm:text-4xl font-bold tracking-tight text-white">
-            Audit your brand across{" "}
-            <span className="text-purple-300">6 core intelligence reports.</span>
-          </h2>
-          <p className="mx-auto mt-4 max-w-xl text-sm text-slate-400">
-            Connect your URL in seconds. Get deterministic LLM vector visibility, competitor whitespace, and 12 execution agents.
-          </p>
-          <div className="mt-8 flex justify-center">
-            <Link
-              href="/onboarding"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-purple-600 px-7 text-xs font-semibold text-white shadow-xl shadow-purple-600/30 transition-all hover:bg-purple-500 active:scale-95"
-            >
-              <span>Scan Your Company Website</span>
-              <ArrowRight className="size-4" />
-            </Link>
+        <section className="px-6 py-16 sm:px-8">
+          <div className="mx-auto max-w-6xl">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-3 border-b border-white/10 pb-5">
+              <div>
+                <h2 className="text-2xl font-bold text-white">{category === "All topics" ? "Explore all guides" : category}</h2>
+                <p className="mt-1 text-sm text-slate-400">{filtered.length} {filtered.length === 1 ? "guide" : "guides"} available</p>
+              </div>
+              <span className="text-xs text-slate-500">Methods, diagrams, examples, and interactive labs</span>
+            </div>
+            {filtered.length ? (
+              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((post) => (
+                  <Link key={post.slug} href={`/blog/${post.slug}`} className="group flex min-h-[325px] flex-col rounded-2xl border border-white/10 bg-white/[0.025] p-6 transition-colors hover:border-violet-400/40 hover:bg-violet-500/[0.055]">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-[11px]"><span className="font-semibold text-violet-300">{post.category}</span><span className="inline-flex items-center gap-1 text-slate-500"><Clock className="size-3" />{post.readTime}</span></div>
+                    <h3 className="mt-5 text-lg font-bold leading-7 text-white group-hover:text-violet-200">{post.title}</h3>
+                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-400">{post.summary}</p>
+                    <div className="mt-auto border-t border-white/10 pt-5">
+                      <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-500">What you will learn</span>
+                      <p className="mt-2 text-xs leading-5 text-slate-300">{post.takeaway}</p>
+                      <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-violet-300">Read guide <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" /></span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.025] p-12 text-center">
+                <Search className="mx-auto size-7 text-slate-500" />
+                <h3 className="mt-4 text-base font-semibold text-white">No matching guides</h3>
+                <p className="mt-2 text-sm text-slate-400">Try another topic or a broader search term.</p>
+                <button type="button" onClick={() => { setQuery(""); setCategory("All topics"); }} className="mt-5 text-sm font-semibold text-violet-300 hover:text-white">Clear filters</button>
+              </div>
+            )}
           </div>
-        </div>
-      </section>
-
-      {/* Liquid Glass Footer without background */}
+        </section>
+      </main>
       <SiteFooter />
     </div>
   );
