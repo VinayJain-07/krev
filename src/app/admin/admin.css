@@ -5,6 +5,7 @@
 .admin-header { padding: 32px clamp(20px, 4vw, 64px); display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; border-bottom: 1px solid #ebdeeb; background: rgba(255,255,255,.8); }
 .admin-header h1 { margin: 7px 0 6px; font-size: clamp(29px, 3vw, 42px); line-height: 1.1; }
 .admin-header p { max-width: 65ch; margin: 0; color: #6f6372; font-size: 13px; line-height: 1.5; }
+.admin-source { display: inline-block; margin-top: 10px; padding: 4px 9px; border: 1px solid #e5d3ec; border-radius: 999px; color: #79429c; background: #fbf4ff; font-size: 11px; font-weight: 750; }
 .admin-header-actions { display: flex; align-items: center; gap: 9px; }
 .admin-header-actions button { min-height: 38px; padding: 8px 13px; border: 1px solid #ddcee4; border-radius: 9px; color: #62366e; background: white; font-size: 12px; font-weight: 750; white-space: nowrap; }
 .admin-header-actions .admin-refresh { border-color: #833bb7; color: white; background: #833bb7; }
@@ -28,6 +29,7 @@
 .admin-table-wrap td:first-child { min-width: 190px; }
 .admin-table-wrap td:last-child { min-width: 210px; }
 .admin-table-wrap td strong { color: #302637; font-size: 12px; }
+.admin-table-wrap td .admin-company-count { color: #752da8; font-size: 16px; }
 .admin-table-wrap td small { display: block; margin-top: 3px; color: #84778a; overflow-wrap: anywhere; }
 .admin-company-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
 .admin-company-tags span { max-width: 170px; padding: 3px 6px; border-radius: 6px; color: #713b8b; background: #f6ecfa; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

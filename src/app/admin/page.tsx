@@ -16,18 +16,27 @@ function recentWindowStart() {
   return new Date(Date.now() - 7 * 24 * 60 * 60_000);
 }
 
+function databaseLabel() {
+  try {
+    const host = new URL(process.env.DATABASE_URL ?? "").hostname;
+    return ["localhost", "127.0.0.1", "[::1]"].includes(host)
+      ? "Local development database"
+      : "Hosted database";
+  } catch {
+    return "Connected database";
+  }
+}
+
 export default async function AdminPage() {
   if (!(await hasAdminSession())) redirect("/admin/login");
   const sevenDaysAgo = recentWindowStart();
 
-  const [totalUsers, totalCompanies, totalLogins, loggedInUsers, recentUsers, users, recentActivity, companyViews] = await Promise.all([
+  const [totalUsers, totalCompanies, loggedInUsers, recentUsers, users, recentActivity, companyViews] = await Promise.all([
     db.user.count(),
     db.company.count(),
-    db.activityEvent.count({ where: { kind: "LOGIN" } }),
     db.activityEvent.groupBy({ by: ["userId"], where: { kind: "LOGIN" } }),
     db.activityEvent.groupBy({ by: ["userId"], where: { kind: "LOGIN", createdAt: { gte: sevenDaysAgo } } }),
     db.user.findMany({
-      take: 100,
       orderBy: { createdAt: "desc" },
       select: {
         id: true, name: true, email: true, createdAt: true,
@@ -62,7 +71,7 @@ export default async function AdminPage() {
 
   return <main className="admin-shell">
     <header className="admin-header">
-      <div><span className="admin-eyebrow">SMARK CONNECT / OWNER VIEW</span><h1>Activity overview</h1><p>Accounts, sign-ins, and companies people opened. Updated every 30 seconds while this tab is visible.</p></div>
+      <div><span className="admin-eyebrow">SMARK CONNECT / OWNER VIEW</span><h1>Registered accounts</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
       <div className="admin-header-actions"><AdminRefresh /><form action={adminSignOut}><button type="submit">Sign out</button></form></div>
     </header>
 
@@ -71,20 +80,20 @@ export default async function AdminPage() {
         <article><span>Registered users</span><strong>{totalUsers.toLocaleString()}</strong><small>Accounts in the database</small></article>
         <article><span>Users signed in</span><strong>{loggedInUsers.length.toLocaleString()}</strong><small>Since activity tracking began</small></article>
         <article><span>Active in 7 days</span><strong>{recentUsers.length.toLocaleString()}</strong><small>Unique users with a recorded sign-in</small></article>
-        <article><span>Companies added</span><strong>{totalCompanies.toLocaleString()}</strong><small>{totalLogins.toLocaleString()} recorded sign-ins</small></article>
+        <article><span>Total companies</span><strong>{totalCompanies.toLocaleString()}</strong><small>Across all registered accounts</small></article>
       </section>
 
       <p className="admin-tracking-note">Login and company-view history starts with this update. Existing accounts and companies are included in totals, while earlier visits are unavailable.</p>
 
       <div className="admin-columns">
         <section className="admin-panel admin-people">
-          <div className="admin-panel-heading"><div><span>ACCOUNT DIRECTORY</span><h2>Who is using Smark Connect</h2></div><small>Latest {users.length} of {totalUsers} accounts</small></div>
-          <div className="admin-table-wrap"><table><thead><tr><th>User</th><th>Joined</th><th>Last sign-in</th><th>Companies added</th></tr></thead><tbody>
+          <div className="admin-panel-heading"><div><span>ACCOUNT DIRECTORY</span><h2>All registered accounts</h2></div><small>Showing all {users.length.toLocaleString()} accounts</small></div>
+          <div className="admin-table-wrap"><table><thead><tr><th>Account</th><th>Joined on</th><th>Companies</th><th>Last sign-in</th></tr></thead><tbody>
             {users.map((user) => <tr key={user.id}>
               <td><strong>{user.name || "Unnamed user"}</strong><small>{user.email}</small></td>
               <td>{when(user.createdAt)}</td>
+              <td><strong className="admin-company-count">{user._count.companies.toLocaleString()}</strong><div className="admin-company-tags">{user.companies.map((company) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}{user._count.companies > user.companies.length && <span>+{user._count.companies - user.companies.length} more</span>}</div></td>
               <td>{when(user.activityEvents[0]?.createdAt)}</td>
-              <td><strong>{user._count.companies}</strong><div className="admin-company-tags">{user.companies.map((company) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}</div></td>
             </tr>)}
             {!users.length && <tr><td colSpan={4} className="admin-empty">No accounts yet.</td></tr>}
           </tbody></table></div>
