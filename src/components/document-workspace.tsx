@@ -2,6 +2,7 @@
 
 import { FormEvent, isValidElement, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 import remarkGfm from "remark-gfm";
 import {
   CheckCircle2,
@@ -54,10 +55,12 @@ function SinglePdfProgressBar() {
 }
 export function DocumentWorkspace({
   document,
+  companyId,
   onClose,
   onUpdate,
 }: {
   document: WorkspaceDocument;
+  companyId: string;
   onClose: () => void;
   onUpdate: (document: WorkspaceDocument) => void;
 }) {
@@ -293,6 +296,7 @@ export function DocumentWorkspace({
 
           </div>
           <div className="document-actions">
+            <Link href={`/dashboard/${companyId}/visuals?document=${document.id}`} title="Explore this report's frameworks in the Visual Studio"><Sparkles size={14} /> Visuals</Link>
             <button type="button" onClick={() => void toggleHistory()} disabled={historyPending} title="View and restore saved versions">
               <History size={14} /> History
             </button>

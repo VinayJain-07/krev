@@ -1042,7 +1042,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         connectionSummary={<ConnectionStrip data={data} />}
       />
 
-      <nav className="dashboard-actions"><Link href={`/dashboard/${data.company.id}/reporting`}>Reporting</Link><button type="button" className="topbar-source-button" onClick={() => setShowSources(true)} aria-label={`Add source documents. ${sources.length} currently included`} title="Add source documents"><Plus size={16} /><span>Sources</span>{sources.length > 0 && <em>{sources.length}</em>}</button><Link href="/settings/credits" aria-label="Settings"><Settings size={16} /></Link><span className="avatar-small">{(data.user.name ?? data.user.email).slice(0, 2).toUpperCase()}</span><LogoutButton /></nav>
+      <nav className="dashboard-actions"><Link href={`/dashboard/${data.company.id}/reporting`}>Reporting</Link><Link href={`/dashboard/${data.company.id}/visuals`}>Visual Studio</Link><button type="button" className="topbar-source-button" onClick={() => setShowSources(true)} aria-label={`Add source documents. ${sources.length} currently included`} title="Add source documents"><Plus size={16} /><span>Sources</span>{sources.length > 0 && <em>{sources.length}</em>}</button><Link href="/settings/credits" aria-label="Settings"><Settings size={16} /></Link><span className="avatar-small">{(data.user.name ?? data.user.email).slice(0, 2).toUpperCase()}</span><LogoutButton /></nav>
     </header>
 
     <section className="dashboard-grid" ref={workspaceRef} style={gridStyle}>
@@ -1397,7 +1397,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
       </aside>
     </section>
 
-    {selectedDocument && <DocumentWorkspace key={`${selectedDocument.id}-${selectedDocument.version}`} document={selectedDocument} onClose={() => setSelectedDocument(null)} onUpdate={updateDocument} />}
+    {selectedDocument && <DocumentWorkspace key={`${selectedDocument.id}-${selectedDocument.version}`} document={selectedDocument} companyId={data.company.id} onClose={() => setSelectedDocument(null)} onUpdate={updateDocument} />}
     {showSources && <SourceDrawer companyName={data.company.name} sources={sources} uploading={sourceUploading} dragActive={sourceDragActive} error={sourceError} inputRef={sourceInputRef} onClose={() => setShowSources(false)} onFiles={(files) => void uploadSourceFiles(files)} onDragActive={setSourceDragActive} onRemove={(source) => void removeSource(source)} />}
     {agentTray && <div className="drawer-backdrop agent-tray-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) setAgentTray(false); }}><section className="agent-tray"><header><div><p className="eyebrow">MARKETING SPECIALISTS</p><h2>Add an agent</h2><span>Each agent uses verified company evidence to produce practical next steps.</span></div><button onClick={() => setAgentTray(false)}>×</button></header><div>{AGENT_DEFINITIONS.filter((agent) => agent.optional).map((agent) => <article key={agent.type}><AgentLogo type={agent.type} fallback="✦" /><div><strong>{agent.label}</strong><p>{agent.description}</p></div><button type="button" disabled={Boolean(runningAgent)} onClick={() => runAgent(agent.type)}>{runningAgent === agent.type ? <RefreshCw className="spin" size={13} /> : <Sparkles size={13} />}{runningAgent === agent.type ? "Running" : "Run analysis"}</button></article>)}</div>{agentError && <p className="form-error">{agentError}</p>}</section></div>}
     {showReportsCatalog && (() => {

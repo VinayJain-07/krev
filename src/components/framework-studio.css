@@ -1,0 +1,75 @@
+.visual-studio { min-height: 100vh; color: #231d29; background: #f7f2f8; font-family: var(--font-sans); }
+.visual-studio button { cursor: pointer; }
+.visual-studio button:focus-visible, .visual-studio a:focus-visible, .visual-studio input:focus-visible, .visual-studio textarea:focus-visible { outline: 3px solid #a85de1; outline-offset: 2px; }
+.visual-studio-header { min-height: 76px; padding: 12px clamp(18px,3vw,46px); display: flex; align-items: center; justify-content: space-between; gap: 18px; border-bottom: 1px solid #e7dce9; background: #fffdfd; }
+.visual-studio-brand { min-width: 0; display: flex; align-items: center; gap: 12px; }
+.visual-studio-brand > span { width: 42px; height: 42px; flex: none; display: grid; place-items: center; border-radius: 12px; color: white; background: linear-gradient(135deg,#8135c3,#b3448c); }
+.visual-studio-brand small { color: #8f4fb2; font-size: 10px; font-weight: 800; letter-spacing: .09em; }
+.visual-studio-brand h1 { margin: 2px 0 0; font-size: clamp(18px,2vw,24px); line-height: 1.2; }
+.visual-studio-header-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.visual-studio-header-actions a, .visual-studio-header-actions button, .visual-studio-intro button { min-height: 38px; padding: 8px 12px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #dfd2e5; border-radius: 9px; color: #514356; background: white; font-size: 12px; font-weight: 700; text-decoration: none; }
+.visual-studio-header-actions .visual-studio-primary { color: white; background: #7935b5; border-color: #7935b5; }
+.visual-studio-header-actions button:disabled { opacity: .55; cursor: wait; }
+.visual-studio-layout { min-height: calc(100vh - 76px); display: grid; grid-template-columns: minmax(250px,310px) minmax(0,1fr); }
+.visual-studio-catalog { min-width: 0; display: flex; flex-direction: column; border-right: 1px solid #e1d5e4; background: #fffdfd; }
+.visual-studio-tabs { padding: 16px 14px 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.visual-studio-tabs button { min-height: 40px; border: 1px solid #e7dce9; border-radius: 9px; color: #6e6172; background: #faf7fa; font-size: 12px; font-weight: 700; }
+.visual-studio-tabs button.active { border-color: #823cc0; color: #722fad; background: #f4eafa; }
+.visual-studio-tabs button:disabled { opacity: .55; cursor: not-allowed; }
+.visual-studio-tabs span { margin-left: 4px; color: #8b729d; }
+.visual-studio-search { min-height: 41px; margin: 0 14px 12px; padding: 0 11px; display: flex; align-items: center; gap: 8px; border: 1px solid #ddd1df; border-radius: 9px; color: #876d93; }
+.visual-studio-search input { width: 100%; border: 0; outline: 0; color: #382b3f; background: transparent; font: 13px var(--font-sans); }
+.visual-studio-filters { padding: 0 14px 12px; display: flex; flex-wrap: wrap; gap: 5px; border-bottom: 1px solid #eee4ee; }
+.visual-studio-filters button { padding: 5px 8px; border: 1px solid #eadfeb; border-radius: 7px; color: #6a5f6e; background: white; font-size: 11px; text-transform: capitalize; }
+.visual-studio-filters button.active { color: white; border-color: #7432b0; background: #7432b0; }
+.visual-studio-list { max-height: calc(100vh - 248px); padding: 10px; overflow-y: auto; }
+.visual-studio-list > button { width: 100%; min-height: 88px; margin-bottom: 6px; padding: 12px; display: block; border: 1px solid #ebe2ed; border-radius: 11px; background: white; text-align: left; }
+.visual-studio-list > button:hover { border-color: #c6a8d8; background: #fcf9fd; }
+.visual-studio-list > button.selected { border-color: #8b41c3; background: #f8effc; box-shadow: 0 0 0 2px rgba(139,65,195,.08); }
+.visual-studio-list > button span { display: inline-block; margin-bottom: 4px; color: #8a41b2; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.visual-studio-list > button strong { display: block; color: #2d2631; font-size: 13px; line-height: 1.35; }
+.visual-studio-list > button small { display: block; margin-top: 5px; color: #776c79; font-size: 11px; line-height: 1.35; }
+.visual-studio-list > p { padding: 20px; color: #746a78; font-size: 13px; }
+.visual-studio-main { min-width: 0; padding: clamp(16px,2.6vw,38px); }
+.visual-studio-intro { max-width: 1240px; margin: 0 auto 18px; display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+.visual-studio-intro span { color: #8b39bc; font-size: 10px; font-weight: 900; letter-spacing: .12em; }
+.visual-studio-intro h2 { margin: 5px 0 8px; color: #271c2e; font-size: clamp(25px,3vw,36px); line-height: 1.15; }
+.visual-studio-intro p { max-width: 70ch; margin: 0; color: #625866; font-size: 13px; line-height: 1.55; }
+.visual-studio-intro button { flex: none; }
+.visual-studio-canvas { max-width: 1240px; min-height: 470px; margin: 0 auto; padding: clamp(16px,2.5vw,32px); border: 1px solid #28334a; border-radius: 20px; color: #f1f5f9; background: radial-gradient(circle at 95% 0%,#24334e 0,transparent 38%),#0f172a; box-shadow: 0 24px 55px rgba(37,24,44,.17); overflow-x: auto; overflow-wrap: anywhere; }
+.visual-studio-canvas .text-xs { font-size: 13px; line-height: 1.45; }
+.visual-studio-canvas [class*="text-[10px]"], .visual-studio-canvas [class*="text-[11px]"] { font-size: 11.5px; line-height: 1.45; }
+.visual-studio-canvas [class*="text-[9px]"] { font-size: 11px; }
+.visual-studio-message { max-width: 1240px; margin: 12px auto; color: #695b6f; font-size: 12px; }
+
+/* Keep the imported renderers inside the Smarketers light visual system. */
+.visual-studio-canvas { color: #342737; background: linear-gradient(145deg, #fffdfd 0%, #fdf5fb 56%, #f3eafa 100%); border-color: #eadbea; }
+.visual-studio-canvas [class~="bg-slate-950"], .visual-studio-canvas [class*="bg-slate-950/"],
+.visual-studio-canvas [class~="bg-slate-900"], .visual-studio-canvas [class*="bg-slate-900/"],
+.visual-studio-canvas [class~="bg-slate-850"], .visual-studio-canvas [class~="bg-slate-800"], .visual-studio-canvas [class*="bg-slate-800/"],
+.visual-studio-canvas [class~="bg-slate-700"], .visual-studio-canvas [class*="bg-slate-700/"] { background-color: #fff !important; }
+.visual-studio-canvas [class*="bg-teal-950"], .visual-studio-canvas [class*="bg-teal-800"], .visual-studio-canvas [class*="bg-teal-700"] { background-color: #f8effb !important; }
+.visual-studio-canvas [class*="bg-rose-950"], .visual-studio-canvas [class*="bg-rose-500"] { background-color: #fff1f5 !important; }
+.visual-studio-canvas [class*="bg-emerald-950"], .visual-studio-canvas [class*="bg-emerald-500"] { background-color: #eefaf5 !important; }
+.visual-studio-canvas [class*="text-slate-50"], .visual-studio-canvas [class*="text-slate-100"], .visual-studio-canvas [class*="text-slate-200"], .visual-studio-canvas [class*="text-slate-300"], .visual-studio-canvas [class*="text-slate-400"], .visual-studio-canvas [class*="text-slate-500"], .visual-studio-canvas [class*="text-slate-600"], .visual-studio-canvas [class*="text-slate-950"] { color: #4f4054 !important; }
+.visual-studio-canvas [class*="text-teal-300"], .visual-studio-canvas [class*="text-teal-400"], .visual-studio-canvas [class*="text-teal-500"] { color: #8739b7 !important; }
+.visual-studio-canvas [class*="text-emerald-300"], .visual-studio-canvas [class*="text-emerald-400"] { color: #168463 !important; }
+.visual-studio-canvas [class*="text-rose-300"], .visual-studio-canvas [class*="text-rose-400"] { color: #b34265 !important; }
+.visual-studio-canvas [class*="border-slate-800"], .visual-studio-canvas [class*="border-slate-700"], .visual-studio-canvas [class*="border-slate-600"] { border-color: #eadfeb !important; }
+.visual-studio-canvas [class*="border-teal-"], .visual-studio-canvas [class*="ring-teal-"] { border-color: #bd83d7 !important; }
+.visual-studio-canvas [class*="border-rose-"] { border-color: #efb8c8 !important; }
+.visual-studio-canvas [class*="border-emerald-"] { border-color: #a8ddc9 !important; }
+.visual-studio-canvas [class*="from-slate-"], .visual-studio-canvas [class*="via-slate-"], .visual-studio-canvas [class*="to-slate-"] { --tw-gradient-from: #fff !important; --tw-gradient-via: #fff !important; --tw-gradient-to: #fbf4fc !important; }
+.visual-studio-canvas .text-white { color: #fff !important; }
+.visual-studio-modal-backdrop { position: fixed; inset: 0; z-index: 100; padding: 18px; display: grid; place-items: center; background: rgba(20,16,26,.64); }
+.visual-studio-modal { width: min(800px,100%); max-height: 90vh; padding: 23px; display: flex; flex-direction: column; border-radius: 16px; color: #302638; background: white; box-shadow: 0 25px 70px rgba(0,0,0,.3); }
+.visual-studio-modal > div:first-child { display: flex; align-items: center; justify-content: space-between; }
+.visual-studio-modal h2 { margin: 0; font-size: 22px; }
+.visual-studio-modal > div:first-child button { padding: 5px; border: 0; background: transparent; }
+.visual-studio-modal p { color: #625967; font-size: 13px; line-height: 1.5; }
+.visual-studio-modal textarea { width: 100%; min-height: 300px; flex: 1; padding: 14px; border: 1px solid #ded3e3; border-radius: 9px; color: #2b2430; background: #faf8fb; font: 12px/1.5 ui-monospace,Consolas,monospace; resize: vertical; }
+.visual-studio-modal footer { margin-top: 14px; display: flex; justify-content: flex-end; gap: 8px; }
+.visual-studio-modal footer button { padding: 10px 13px; border: 1px solid #e0d4e6; border-radius: 8px; color: #5e4d64; background: white; font-size: 12px; font-weight: 700; }
+.visual-studio-modal footer button:last-child { color: white; border-color: #7d38b5; background: #7d38b5; }
+@media (max-width: 900px) { .visual-studio-layout { grid-template-columns: 1fr; }.visual-studio-catalog { border-right: 0; border-bottom: 1px solid #e1d5e4; }.visual-studio-list { max-height: 190px; display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; }.visual-studio-list > button { min-width: 210px; max-width: 250px; }.visual-studio-intro { align-items: start; }.visual-studio-main { padding: 20px; } }
+@media (max-width: 600px) { .visual-studio-header { align-items: start; flex-direction: column; }.visual-studio-header-actions { width: 100%; }.visual-studio-header-actions a, .visual-studio-header-actions button { flex: 1; }.visual-studio-intro { flex-direction: column; }.visual-studio-canvas { padding: 12px; }.visual-studio-modal { padding: 15px; } }
