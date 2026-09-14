@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { unwrapStructuredText } from "@/lib/text-format";
 import { normalizeDocumentMarkdown } from "@/lib/documents/content";
+import { documentContentIssue } from "@/lib/documents/content-quality";
 import { prepareFrameworks, readFramework } from "@/lib/documents/frameworks";
 import { FrameworkVisual } from "./framework-visual";
 import { resolveArtifactManifest } from "@/lib/artifacts/config";
@@ -80,6 +81,7 @@ export function DocumentWorkspace({
     () => normalizeDocumentMarkdown(unwrapStructuredText(document.contentMarkdown)),
     [document.contentMarkdown]
   );
+  const qualityIssue = useMemo(() => documentContentIssue(cleanContent), [cleanContent]);
   const visualContent = useMemo(() => prepareFrameworks(cleanContent), [cleanContent]);
   const artifactManifest = resolveArtifactManifest({ reportType: document.type, markdown: document.contentMarkdown, metadata });
   const pdfEnabled = artifactManifest.decisions.pdf.enabled;
@@ -102,8 +104,21 @@ export function DocumentWorkspace({
     if (pdfUrlRef.current) URL.revokeObjectURL(pdfUrlRef.current);
   }, []);
 
+  function clearPdfPreview() {
+    if (pdfUrlRef.current) URL.revokeObjectURL(pdfUrlRef.current);
+    pdfUrlRef.current = "";
+    setPdfUrl("");
+    setPdfState("idle");
+    setPdfError("");
+  }
+
   async function generatePdf(download = false) {
     if (pdfState === "loading") return;
+    if (qualityIssue) {
+      setPdfState("error");
+      setPdfError(`${qualityIssue} Use Repair report first.`);
+      return;
+    }
     setPdfState("loading");
     setPdfError("");
 
@@ -185,10 +200,33 @@ export function DocumentWorkspace({
       const data = (await response.json()) as { document?: WorkspaceDocument; error?: string };
       if (!response.ok || !data.document) throw new Error(data.error ?? "The document could not be edited.");
       onUpdate(data.document);
+      clearPdfPreview();
       setPrompt("");
       setTab("document");
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : "The document could not be edited.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  async function repairDocument() {
+    if (pending || document.locked || !qualityIssue) return;
+    setPending(true);
+    setError("");
+    try {
+      const response = await fetch(`/api/documents/${document.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: "Rebuild this report from the saved company sources with concise, readable analysis and source-backed recommendations.", focused: false, repair: true }),
+      });
+      const data = await response.json() as { document?: WorkspaceDocument; error?: string };
+      if (!response.ok || !data.document) throw new Error(data.error ?? "The report could not be repaired.");
+      onUpdate(data.document);
+      clearPdfPreview();
+      setTab("document");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "The report could not be repaired.");
     } finally {
       setPending(false);
     }
@@ -221,6 +259,7 @@ export function DocumentWorkspace({
       const payload = await response.json() as { document?: WorkspaceDocument; error?: string };
       if (!response.ok || !payload.document) throw new Error(payload.error ?? "The version could not be restored.");
       onUpdate(payload.document);
+      clearPdfPreview();
       setVersions([]);
       setHistoryOpen(false);
       setTab("document");
@@ -351,7 +390,12 @@ export function DocumentWorkspace({
                 </div>
               )}
 
-              <article className="document-page">
+              {qualityIssue ? <div className="document-quality-warning" role="alert">
+                <strong>This report needs repair</strong>
+                <p>{qualityIssue} The saved version will remain available in History. Repair uses the saved website and uploaded sources, then checks the new text before replacing this version.</p>
+                <button type="button" disabled={pending || document.locked} onClick={() => void repairDocument()}>{pending ? "Repairing report…" : "Repair report"}</button>
+                {error && <p className="form-error">{error}</p>}
+              </div> : <article className="document-page">
                 <div className="document-kicker">THE SMARKETERS / AI CMO REPORT</div>
                 <div className="markdown-render-flow">
                   <ReactMarkdown
@@ -379,9 +423,10 @@ export function DocumentWorkspace({
                   <span>Professionally formatted on export</span>
                 </footer>
               </article>
+              }
             </>
           ) : tab === "deck" ? (
-            <PresentationPreview
+            qualityIssue ? <div className="document-quality-warning" role="alert"><strong>This report needs repair</strong><p>{qualityIssue} Return to the Document tab and choose Repair report.</p></div> : <PresentationPreview
               title={document.title}
               markdown={cleanContent}
               theme={artifactManifest.theme}

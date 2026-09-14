@@ -9,6 +9,7 @@ import { Launcher } from "chrome-launcher";
 import type { ArtifactManifest, ReportDataModel } from "../artifacts/types";
 import { normalizeDocumentMarkdown } from "./content";
 import { prepareFrameworks } from "./frameworks";
+import { assertDocumentContentQuality } from "./content-quality";
 
 export type VisualReportCompetitor = { companyName: string; officialWebsite: string; logoUrl?: string; logoDataUrl?: string; positioning: string; competitiveAttributes: string[] };
 export type VisualReportModule = { type: string; title: string; markdown: string; competitors?: VisualReportCompetitor[] };
@@ -69,6 +70,8 @@ function printWithChromium(htmlPath: string, pdfPath: string) {
 }
 
 export async function createVisualReport(args: VisualReportArgs): Promise<VisualReportResult> {
+  assertDocumentContentQuality(args.markdown);
+  for (const reportModule of args.modules ?? []) assertDocumentContentQuality(reportModule.markdown);
   const cacheKey = createHash("sha256").update(JSON.stringify({ ...args, updatedAt: args.updatedAt.toISOString() })).digest("hex");
   const cached = reportCache.get(cacheKey);
   if (cached) return cached;

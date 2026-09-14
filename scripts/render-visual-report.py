@@ -621,8 +621,8 @@ body {
     margin: 0;
     font-family: Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     color: var(--near-black);
-    font-size: 9.5pt;
-    line-height: 1.5;
+    font-size: 10pt;
+    line-height: 1.58;
     background: #FFFFFF;
     position: relative;
 }
@@ -855,10 +855,10 @@ body {
 }
 
 .report-p {
-    font-size: 9.2pt;
-    color: var(--slate-gray);
-    margin: 0 0 8px;
-    line-height: 1.5;
+    font-size: 10.25pt;
+    color: var(--near-black);
+    margin: 0 0 11px;
+    line-height: 1.62;
     orphans: 3;
     widows: 3;
 }

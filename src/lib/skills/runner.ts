@@ -7,6 +7,7 @@ import { extractJson } from "@/lib/llm/shared";
 import { resolveCompanyLogo } from "@/lib/company-logo";
 import { normalizeAcronyms, unwrapStructuredText } from "@/lib/text-format";
 import { documentMarkdown, DOCUMENT_OUTPUT_RULES } from "@/lib/documents/presentation";
+import { assertDocumentContentQuality } from "@/lib/documents/content-quality";
 import { normalizeDocumentMarkdown } from "@/lib/documents/content";
 import { documentOutputContract } from "@/lib/documents/output-contract";
 import { discoverLiveResearch, liveResearchAction, type LiveDiscoveryItem } from "@/lib/research/live-discovery";
@@ -504,6 +505,7 @@ export async function completeAnalysis(args: {
   } catch {
     analysis = analysisFromMarkdown(raw, args.title);
   }
+  if (args.outputKind === "document") assertDocumentContentQuality(analysis.contentMarkdown);
   return {
     analysis,
     tokensUsed: estimateTokens(system, userPrompt, raw),
@@ -602,6 +604,7 @@ export async function saveCoreAnalysis(args: {
 }) {
   const research = await db.company.findUnique({ where: { id: args.companyId }, include: { crawlPages: { orderBy: { fetchedAt: "desc" }, take: 48 }, pageSpeedAudits: { orderBy: { createdAt: "desc" }, take: 2 }, chatAttachments: { where: { remembered: true }, select: { title: true } } } });
   const contentMarkdown = normalizeDocumentMarkdown(research ? appendCompleteResearchAppendix(documentMarkdown(args.analysis.contentMarkdown), { companyName: research.name, websiteUrl: research.websiteUrl, pages: research.crawlPages, pageSpeed: research.pageSpeedAudits }) : documentMarkdown(args.analysis.contentMarkdown));
+  assertDocumentContentQuality(contentMarkdown);
   const completeSources = Array.from(new Set([...(research?.crawlPages.map((page) => page.url) ?? []), ...args.analysis.findings.flatMap((finding) => finding.sourceUrls)]));
   const competitors = args.analysis.findings.filter((finding) => finding.companyName && finding.officialWebsite).map((finding) => ({ companyName: finding.companyName, officialWebsite: finding.officialWebsite, logoUrl: finding.logoUrl, positioning: finding.evidence, competitiveAttributes: finding.competitiveAttributes }));
   await db.$transaction(async (tx) => {
