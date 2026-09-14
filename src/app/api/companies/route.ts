@@ -6,6 +6,7 @@ import { assertPublicUrl, normalizedDomain, normalizeWebsiteUrl } from "@/lib/cr
 import { runInitialAudit } from "@/lib/audit/run-initial-audit";
 import { createOrReuseAuditJob } from "@/lib/audit/jobs";
 import { resolveCompanyLogo } from "@/lib/company-logo";
+import { recordCompanyCreated } from "@/lib/admin/activity";
 
 const schema = z.object({ companyName: z.string().trim().min(2).max(120), websiteUrl: z.string().trim().min(4).max(2048) });
 
@@ -24,6 +25,7 @@ export async function POST(request: Request) {
     const logoUrl = await resolveCompanyLogo(url).catch(() => null);
     const existingCompany = await db.company.findUnique({ where: { userId_normalizedDomain: { userId: user.id, normalizedDomain: domain } } });
     const company = existingCompany ?? await db.company.create({ data: { userId: user.id, name: parsed.data.companyName, websiteUrl: url.href, normalizedDomain: domain, logoUrl } });
+    if (!existingCompany) await recordCompanyCreated(user.id, company.id);
     const result = await createOrReuseAuditJob({ companyId: company.id });
     if (!result.resumed && existingCompany) {
       await db.company.update({ where: { id: company.id }, data: { name: parsed.data.companyName, websiteUrl: url.href, logoUrl: logoUrl ?? existingCompany.logoUrl, status: "ONBOARDING", crawlStatus: "QUEUED", crawlProgress: 0, crawlStep: "Queued", crawlError: null } });

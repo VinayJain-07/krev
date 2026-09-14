@@ -1,10 +1,12 @@
 import { notFound, redirect } from "next/navigation";
+import { after } from "next/server";
 import { DashboardClient } from "@/components/dashboard-client";
 import { requireUser } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { createCompanyContext } from "@/lib/company-brief";
 import { newestRunPerAgent } from "@/lib/agents/latest-runs";
 import { withoutSkillProvenance } from "@/lib/documents/public";
+import { recordCompanyView } from "@/lib/admin/activity";
 
 export default async function DashboardPage({ params }: PageProps<"/dashboard/[companyId]">) {
   const user = await requireUser();
@@ -30,6 +32,7 @@ export default async function DashboardPage({ params }: PageProps<"/dashboard/[c
   });
   if (!company) notFound();
   if (company.status !== "ACTIVE" && company.auditJobs[0]) redirect(`/onboarding/audit/${company.auditJobs[0].id}`);
+  after(() => recordCompanyView(user.id, company.id));
   const companies = await db.company.findMany({
     where: { userId: user.id },
     select: { id: true, name: true, websiteUrl: true, logoUrl: true, status: true },

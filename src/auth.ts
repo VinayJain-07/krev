@@ -5,6 +5,7 @@ import Google from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
+import { recordLogin } from "@/lib/admin/activity";
 
 const loginSchema = z.object({
   email: z.string().email().transform((value) => value.toLowerCase()),
@@ -44,13 +45,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   callbacks: {
     async signIn({ user, account }) {
-      if (account?.provider !== "google" || !user.email) return true;
-      const saved = await db.user.upsert({
-        where: { email: user.email.toLowerCase() },
-        update: { name: user.name, image: user.image, emailVerified: new Date() },
-        create: { email: user.email.toLowerCase(), name: user.name, image: user.image, emailVerified: new Date() },
-      });
-      user.id = saved.id;
+      if (account?.provider === "google" && user.email) {
+        const saved = await db.user.upsert({
+          where: { email: user.email.toLowerCase() },
+          update: { name: user.name, image: user.image, emailVerified: new Date() },
+          create: { email: user.email.toLowerCase(), name: user.name, image: user.image, emailVerified: new Date() },
+        });
+        user.id = saved.id;
+      }
+      if (user.id) await recordLogin(user.id, account?.provider ?? "unknown");
       return true;
     },
     async jwt({ token, user }) {

@@ -82,6 +82,8 @@ Requires Node 20+ and pnpm 10+.
 
 Open [http://localhost:3000](http://localhost:3000).
 
+The private activity dashboard is at `/admin`. Set `ADMIN_PASSWORD_HASH` in `.env.local` to a bcrypt hash of the admin password, then sign in there. Generate a hash with `node -e 'console.log(require("bcryptjs").hashSync("YOUR_ADMIN_PASSWORD", 12))'`. In `.env.local`, escape each `$` in the hash as `\$` so Next.js does not expand it as a variable; managed hosting environment fields accept the hash unchanged. Keep the hash out of Git. The dashboard shows registered users and their companies, plus sign-ins and company views recorded after activity tracking was enabled.
+
 For a conventional PostgreSQL database with migration history, use `pnpm db:deploy` in production.
 
 ## Demo account
@@ -109,6 +111,7 @@ The Lighthouse test suite covers URL safety, cache reuse and expiry, duplicate j
 
 - Managed PostgreSQL `DATABASE_URL`
 - Unique `AUTH_SECRET` and `SECRET_ENCRYPTION_KEY`
+- `ADMIN_PASSWORD_HASH` for the private activity dashboard
 - The three skill repositories available as sibling directories, or an equivalent packaged skill volume
 - Provider API keys supplied by each user
 - Chromium at `PUPPETEER_EXECUTABLE_PATH` or `CHROME_PATH` (the Docker image configures `/usr/bin/chromium`)
@@ -125,7 +128,7 @@ Build and test the image locally with Docker Desktop:
 docker build -t smark-connect .
 ```
 
-For Render, create a PostgreSQL database and a Docker web service from this repository. Set `DATABASE_URL`, `AUTH_SECRET`, `SECRET_ENCRYPTION_KEY`, and the public Render URL as `AUTH_URL`. For the Google-hosted audit provider, also set `PAGESPEED_INSIGHTS_API_KEY` and optionally `SPEED_AUDIT_PROVIDER=pagespeed`; when the key is present, PageSpeed Insights is selected automatically. The Docker `CMD` runs `pnpm start`; its `prestart` lifecycle automatically runs `prisma migrate deploy` before Next.js starts, so the free tier does not need a pre-deploy command. The server reads `process.env.PORT` and binds through `HOSTNAME=0.0.0.0`. Configure `/api/health` as the health-check path. The image includes Chromium, its Linux dependencies, and the Python PDF renderer. No API key is required when using the self-hosted provider.
+For Render, create a PostgreSQL database and a Docker web service from this repository. Set `DATABASE_URL`, `AUTH_SECRET`, `SECRET_ENCRYPTION_KEY`, `ADMIN_PASSWORD_HASH`, and the public Render URL as `AUTH_URL`. For the Google-hosted audit provider, also set `PAGESPEED_INSIGHTS_API_KEY` and optionally `SPEED_AUDIT_PROVIDER=pagespeed`; when the key is present, PageSpeed Insights is selected automatically. The Docker `CMD` runs `pnpm start`; its `prestart` lifecycle automatically runs `prisma migrate deploy` before Next.js starts, so the free tier does not need a pre-deploy command. The server reads `process.env.PORT` and binds through `HOSTNAME=0.0.0.0`. Configure `/api/health` as the health-check path. The image includes Chromium, its Linux dependencies, and the Python PDF renderer. No API key is required when using the self-hosted provider.
 
 On Render's free tier, Chromium cold starts and constrained CPU/memory can make audits slow, and the service may spin down between requests. The one-audit worker protects the instance, but queued in-process work is not durable across a restart; job records remain in PostgreSQL and may need a retry after an interrupted deployment or spin-down. Use one instance with the current queue design.
 

@@ -89,6 +89,12 @@ enum LighthouseJobStatus {
   FAILED
 }
 
+enum ActivityKind {
+  LOGIN
+  COMPANY_CREATED
+  COMPANY_VIEWED
+}
+
 model User {
   id              String           @id @default(cuid())
   name            String?
@@ -107,6 +113,7 @@ model User {
   companies       Company[]
   chatAttachments ChatAttachment[]
   lighthouseAudits LighthouseAuditJob[]
+  activityEvents  ActivityEvent[]
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
 }
@@ -161,11 +168,34 @@ model Company {
   chatSessions     ChatSession[]
   chatAttachments  ChatAttachment[]
   reports          Report[]
+  activityEvents   ActivityEvent[]
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 
   @@unique([userId, normalizedDomain])
   @@index([userId, status])
+}
+
+model ActivityEvent {
+  id        String       @id @default(cuid())
+  userId    String
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  companyId String?
+  company   Company?     @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  kind      ActivityKind
+  detail    String?
+  createdAt DateTime     @default(now())
+
+  @@index([kind, createdAt])
+  @@index([userId, kind, createdAt])
+  @@index([companyId, kind, createdAt])
+}
+
+model AdminAuthThrottle {
+  key         String   @id
+  failedCount Int      @default(0)
+  lockedUntil DateTime?
+  updatedAt   DateTime @updatedAt
 }
 
 model AuditJob {
