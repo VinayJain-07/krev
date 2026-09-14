@@ -137,7 +137,7 @@ export default function PricingPage() {
                   <span className="text-sm font-medium text-slate-400">/year</span>
                 </div>
                 <p className="mt-2 text-xs text-purple-300">
-                  That's $33/month, billed annually. Saves you $309/year.
+                  That&apos;s $33/month, billed annually. Saves you $309/year.
                 </p>
 
                 <div className="my-8 border-t border-purple-500/20" />
@@ -213,7 +213,7 @@ export default function PricingPage() {
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl">
               Everything you need,
               <br />
-              <span className="font-serif italic font-normal text-purple-300">nothing you don't.</span>
+              <span className="font-serif italic font-normal text-purple-300">nothing you don&apos;t.</span>
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-base text-slate-400">
               Every subscriber gets unrestricted access to our complete marketing intelligence engine, agent suite, and stakeholder export formats.

@@ -57,6 +57,7 @@
 .admin-login-card label { display: block; margin-bottom: 7px; color: #3f3344; font-size: 12px; font-weight: 750; }
 .admin-login-card input { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #d9cadd; border-radius: 10px; color: #302738; background: #fffcff; font: inherit; font-size: 14px; }
 .admin-login-card form > button { width: 100%; min-height: 46px; margin-top: 14px; border: 0; border-radius: 10px; color: #fff; background: #803ab5; font-size: 13px; font-weight: 800; }
+.admin-login-card .admin-retry { width: 100%; min-height: 46px; border: 0; border-radius: 10px; color: #fff; background: #803ab5; font-size: 13px; font-weight: 800; }
 .admin-login-card > small { display: block; margin-top: 16px; color: #928497; font-size: 11px; text-align: center; }
 .admin-form-error { margin: 9px 0 0; color: #a22e57; font-size: 12px; }
 @media (max-width: 1050px) { .admin-columns { grid-template-columns: 1fr; } }

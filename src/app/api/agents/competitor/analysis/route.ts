@@ -142,7 +142,7 @@ export async function POST(request: Request) {
         companyId: company.id,
         agentType: "COMPETITOR",
         status: "DONE",
-        output: payload as any,
+        output: payload as unknown as Prisma.InputJsonValue,
         startedAt: new Date(),
         completedAt: new Date(),
       },

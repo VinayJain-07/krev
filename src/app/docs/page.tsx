@@ -149,7 +149,7 @@ export default function DocsPage() {
               </div>
               <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Getting Started</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                Smark Connect is an AI-powered marketing intelligence platform that turns your company's website into a full marketing command center. Unlike disconnected tools or shallow ChatGPT prompts, Smark Connect crawls your public digital footprint to extract verified evidence before generating strategy.
+                Smark Connect is an AI-powered marketing intelligence platform that turns your company&apos;s website into a full marketing command center. Unlike disconnected tools or shallow ChatGPT prompts, Smark Connect crawls your public digital footprint to extract verified evidence before generating strategy.
               </p>
 
               <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] p-5">
@@ -379,13 +379,13 @@ export default function DocsPage() {
                 <h3 className="text-sm font-semibold text-white">Recommended Questions for Your AI CMO:</h3>
                 <div className="mt-3 space-y-2 text-xs text-slate-300">
                   <div className="rounded-lg bg-black/40 p-2.5 font-mono text-purple-300 border border-white/5">
-                    "Based on our competitor whitespace and SEO gaps, what are our top 3 moves for Q3?"
+                    &quot;Based on our competitor whitespace and SEO gaps, what are our top 3 moves for Q3?&quot;
                   </div>
                   <div className="rounded-lg bg-black/40 p-2.5 font-mono text-purple-300 border border-white/5">
-                    "Draft a 90-day outbound campaign addressing the top 3 objections from our audience audit."
+                    &quot;Draft a 90-day outbound campaign addressing the top 3 objections from our audience audit.&quot;
                   </div>
                   <div className="rounded-lg bg-black/40 p-2.5 font-mono text-purple-300 border border-white/5">
-                    "How can we optimize our homepage schema to get cited by ChatGPT and Perplexity?"
+                    &quot;How can we optimize our homepage schema to get cited by ChatGPT and Perplexity?&quot;
                   </div>
                 </div>
               </div>
@@ -560,7 +560,7 @@ export default function DocsPage() {
               </div>
               <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Analytics & Lighthouse Auditing</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                Smark Connect hosts its own local Chromium Lighthouse auditor. We don't rely on third-party rate-limited APIs to gauge your site's Core Web Vitals.
+                Smark Connect hosts its own local Chromium Lighthouse auditor. We don&apos;t rely on third-party rate-limited APIs to gauge your site&apos;s Core Web Vitals.
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 text-center">

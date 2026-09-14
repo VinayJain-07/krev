@@ -47,40 +47,44 @@ export function LiveConversationMining({
   const [selectedProspect, setSelectedProspect] = useState<ConversationProspect | null>(null);
   const [copiedHook, setCopiedHook] = useState(false);
   const [lockWarning, setLockWarning] = useState<string | null>(null);
-  const [now, setNow] = useState<number>(Date.now());
+  const [now, setNow] = useState<number | null>(null);
 
   // Load persistence state from localStorage
   useEffect(() => {
-    try {
-      const storageKeyTime = `smark_miner_last_refreshed_${companyId}`;
-      const storageKeySeen = `smark_miner_seen_${companyId}`;
+    const loadTimer = setTimeout(() => {
+      try {
+        const storageKeyTime = `smark_miner_last_refreshed_${companyId}`;
+        const storageKeySeen = `smark_miner_seen_${companyId}`;
 
-      const savedTime = localStorage.getItem(storageKeyTime);
-      if (savedTime) {
-        const timeNum = Number.parseInt(savedTime, 10);
-        if (!Number.isNaN(timeNum)) setLastRefreshedAt(timeNum);
-      }
+        const savedTime = localStorage.getItem(storageKeyTime);
+        if (savedTime) {
+          const timeNum = Number.parseInt(savedTime, 10);
+          if (!Number.isNaN(timeNum)) setLastRefreshedAt(timeNum);
+        }
 
-      const savedSeen = localStorage.getItem(storageKeySeen);
-      if (savedSeen) {
-        const parsedSeen = JSON.parse(savedSeen);
-        if (Array.isArray(parsedSeen)) setSeenLeadIds(parsedSeen.filter((x): x is string => typeof x === "string"));
+        const savedSeen = localStorage.getItem(storageKeySeen);
+        if (savedSeen) {
+          const parsedSeen = JSON.parse(savedSeen);
+          if (Array.isArray(parsedSeen)) setSeenLeadIds(parsedSeen.filter((x): x is string => typeof x === "string"));
+        }
+      } catch {
+        // Ignore storage read errors
       }
-    } catch {
-      // Ignore storage read errors
-    }
+    }, 0);
+    return () => clearTimeout(loadTimer);
   }, [companyId]);
 
   // Update timer tick every minute
   useEffect(() => {
+    const initialTick = setTimeout(() => setNow(Date.now()), 0);
     const interval = setInterval(() => setNow(Date.now()), 60000);
-    return () => clearInterval(interval);
+    return () => { clearTimeout(initialTick); clearInterval(interval); };
   }, []);
 
   // Compute 24-hour refresh status
-  const elapsedMs = lastRefreshedAt ? now - lastRefreshedAt : Number.POSITIVE_INFINITY;
-  const canRefresh = elapsedMs >= REFRESH_INTERVAL_MS;
-  const remainingMs = Math.max(0, REFRESH_INTERVAL_MS - elapsedMs);
+  const elapsedMs = lastRefreshedAt && now !== null ? now - lastRefreshedAt : Number.POSITIVE_INFINITY;
+  const canRefresh = !lastRefreshedAt || (now !== null && elapsedMs >= REFRESH_INTERVAL_MS);
+  const remainingMs = lastRefreshedAt && now === null ? REFRESH_INTERVAL_MS : Math.max(0, REFRESH_INTERVAL_MS - elapsedMs);
 
   const hoursLeft = Math.floor(remainingMs / (1000 * 60 * 60));
   const minsLeft = Math.floor((remainingMs % (1000 * 60 * 60)) / (1000 * 60));

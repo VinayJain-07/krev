@@ -1,3 +1,5 @@
+// This generator is a standalone CommonJS script.
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
 
 const fileContent = `"use client";
@@ -346,11 +348,11 @@ export function ScrollytellingEightLayers() {
                     <div className="ml-4 pl-3 border-l-2 border-indigo-500/40 space-y-2">
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">applicationCategory</span>
-                        <span className="text-emerald-400">"MarketingIntelligence"</span>
+                        <span className="text-emerald-400">&quot;MarketingIntelligence&quot;</span>
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">operatingSystem</span>
-                        <span className="text-emerald-400">"Web"</span>
+                        <span className="text-emerald-400">&quot;Web&quot;</span>
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">entityClarityScore</span>
@@ -554,7 +556,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-purple-300 font-mono">Executive ICP</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-300 italic">
-                        "Needs board-ready narrative decks in minutes without 3-week agency delays."
+                        &quot;Needs board-ready narrative decks in minutes without 3-week agency delays.&quot;
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1.5 text-[9px]">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-purple-200">Board Alignment</span>
@@ -569,7 +571,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-indigo-300 font-mono">Demand Gen</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-300 italic">
-                        "Requires verified intent leads mined directly from social conversations."
+                        &quot;Requires verified intent leads mined directly from social conversations.&quot;
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1.5 text-[9px]">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-indigo-200">100-Pt Leads</span>
@@ -583,7 +585,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-emerald-400 font-mono">Technical</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-400 italic">
-                        "Demands 100/100 Core Web Vitals and LLM citation dominance."
+                        &quot;Demands 100/100 Core Web Vitals and LLM citation dominance.&quot;
                       </p>
                     </div>
                   </div>

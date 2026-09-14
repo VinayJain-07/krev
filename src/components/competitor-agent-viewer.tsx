@@ -51,27 +51,25 @@ export function CompetitorAgentViewer({
   const [filterCategory, setFilterCategory] = useState<string>("all");
 
   useEffect(() => {
-    if (!initialPayload) {
-      fetchData();
-    }
-  }, [companyId, initialPayload]);
-
-  async function fetchData() {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/agents/competitor/analysis?companyId=${companyId}`);
-      if (res.ok) {
-        const json = await res.json();
-        if (json.payload) {
-          setPayload(json.payload);
+    if (initialPayload) return;
+    let active = true;
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/agents/competitor/analysis?companyId=${companyId}`);
+        if (res.ok) {
+          const json = await res.json();
+          if (active && json.payload) setPayload(json.payload);
         }
+      } catch (err) {
+        console.error("Failed to load competitor intelligence", err);
+      } finally {
+        if (active) setLoading(false);
       }
-    } catch (err) {
-      console.error("Failed to load competitor intelligence", err);
-    } finally {
-      setLoading(false);
     }
-  }
+    void fetchData();
+    return () => { active = false; };
+  }, [companyId, initialPayload]);
 
   async function handleRefresh() {
     setRefreshing(true);

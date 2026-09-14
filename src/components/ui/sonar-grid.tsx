@@ -69,7 +69,6 @@ export function SonarGrid({
   const refreshRef = React.useRef<() => void>(() => {})
 
   const opts = React.useRef({ spacing, dotRadius, baseOpacity, color, pingEvery, speed, ringWidth, amplitude, interactive, maxRings, seedPing, pingArea })
-  opts.current = { spacing, dotRadius, baseOpacity, color, pingEvery, speed, ringWidth, amplitude, interactive, maxRings, seedPing, pingArea }
 
   const setHost = React.useCallback(
     (node: HTMLDivElement | null) => {
@@ -82,6 +81,10 @@ export function SonarGrid({
     },
     [ref]
   )
+
+  React.useEffect(() => {
+    opts.current = { spacing, dotRadius, baseOpacity, color, pingEvery, speed, ringWidth, amplitude, interactive, maxRings, seedPing, pingArea }
+  }, [spacing, dotRadius, baseOpacity, color, pingEvery, speed, ringWidth, amplitude, interactive, maxRings, seedPing, pingArea])
 
   React.useEffect(() => {
     const host = hostRef.current

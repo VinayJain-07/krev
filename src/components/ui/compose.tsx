@@ -81,7 +81,6 @@ function caretCoords(el: HTMLTextAreaElement, pos: number) {
   s.top = "0";
   s.left = "-9999px";
   for (const p of CARET_PROPS) {
-    // @ts-ignore
     s[p] = cs[p];
   }
   s.height = "auto";

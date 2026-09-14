@@ -107,8 +107,8 @@ export function ParticleWave({
       for (let ix = 0; ix < countX; ix++) {
         for (let iz = 0; iz < countZ; iz++) {
           // World 3D positions
-          let rawX = ix * separation - halfX;
-          let rawZ = iz * separation - halfZ;
+          const rawX = ix * separation - halfX;
+          const rawZ = iz * separation - halfZ;
 
           // Double sine wave oscillation with mouse wave disturbance
           const distToCenter = Math.sqrt(rawX * rawX + rawZ * rawZ) / 380;

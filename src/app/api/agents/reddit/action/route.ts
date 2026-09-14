@@ -51,7 +51,7 @@ export async function POST(request: Request) {
 
   let newCompleted = [...currentCompleted];
   let newDismissed = [...currentDismissed];
-  let newFeedback = [
+  const newFeedback = [
     ...feedbackLog,
     {
       opportunityId,

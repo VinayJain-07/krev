@@ -15,8 +15,8 @@ export function AppPreloader() {
     if (!force) {
       const hasSeen = sessionStorage.getItem("sc_preloader_seen");
       if (hasSeen) {
-        setUnmounted(true);
-        return;
+        const skipTimer = setTimeout(() => setUnmounted(true), 0);
+        return () => clearTimeout(skipTimer);
       }
     }
 

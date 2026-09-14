@@ -344,11 +344,11 @@ export function ScrollytellingEightLayers() {
                     <div className="ml-4 pl-3 border-l-2 border-indigo-500/40 space-y-2">
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">applicationCategory</span>
-                        <span className="text-emerald-400">"MarketingIntelligence"</span>
+                        <span className="text-emerald-400">&quot;MarketingIntelligence&quot;</span>
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">operatingSystem</span>
-                        <span className="text-emerald-400">"Web"</span>
+                        <span className="text-emerald-400">&quot;Web&quot;</span>
                       </div>
                       <div className="rounded-lg border border-white/10 bg-white/5 p-2 flex items-center justify-between text-[10px]">
                         <span className="text-slate-300">entityClarityScore</span>
@@ -552,7 +552,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-purple-300 font-mono">Executive ICP</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-300 italic">
-                        "Needs board-ready narrative decks in minutes without 3-week agency delays."
+                        &quot;Needs board-ready narrative decks in minutes without 3-week agency delays.&quot;
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1.5 text-[9px]">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-purple-200">Board Alignment</span>
@@ -567,7 +567,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-indigo-300 font-mono">Demand Gen</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-300 italic">
-                        "Requires verified intent leads mined directly from social conversations."
+                        &quot;Requires verified intent leads mined directly from social conversations.&quot;
                       </p>
                       <div className="mt-2 flex flex-wrap gap-1.5 text-[9px]">
                         <span className="rounded bg-white/10 px-2 py-0.5 text-indigo-200">100-Pt Leads</span>
@@ -581,7 +581,7 @@ export function ScrollytellingEightLayers() {
                         <span className="text-[10px] text-emerald-400 font-mono">Technical</span>
                       </div>
                       <p className="mt-1 text-[11px] text-slate-400 italic">
-                        "Demands 100/100 Core Web Vitals and LLM citation dominance."
+                        &quot;Demands 100/100 Core Web Vitals and LLM citation dominance.&quot;
                       </p>
                     </div>
                   </div>
@@ -660,10 +660,10 @@ export function ScrollytellingEightLayers() {
                       {/* Question / Asking Text */}
                       <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-xs text-slate-200 leading-relaxed">
                         <p className="font-semibold text-white mb-1">
-                          "Looking for an AI platform that unifies complete website intelligence + multi-agent execution? Tired of prompt drift across tools."
+                          &quot;Looking for an AI platform that unifies complete website intelligence + multi-agent execution? Tired of prompt drift across tools.&quot;
                         </p>
                         <p className="text-[11px] text-slate-400 italic">
-                          "We're replacing our legacy SEO stack. Budget is approved for Q4. Need verified evidence, not hallucinations."
+                          &quot;We&apos;re replacing our legacy SEO stack. Budget is approved for Q4. Need verified evidence, not hallucinations.&quot;
                         </p>
                       </div>
 
@@ -671,7 +671,7 @@ export function ScrollytellingEightLayers() {
                       <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-400">
                         <span className="flex items-center gap-1 text-orange-300 font-medium">
                           <span>⚡ Trigger:</span>
-                          <span className="text-slate-300">"budget approved for Q4 • replacing SEO stack"</span>
+                          <span className="text-slate-300">&quot;budget approved for Q4 • replacing SEO stack&quot;</span>
                         </span>
                         <span className="text-emerald-400 font-mono font-bold">Hook Generated</span>
                       </div>
@@ -716,10 +716,10 @@ export function ScrollytellingEightLayers() {
                       {/* Question / Asking Text */}
                       <div className="rounded-xl border border-white/5 bg-white/[0.02] p-3 text-xs text-slate-200 leading-relaxed">
                         <p className="font-semibold text-white mb-1">
-                          "What tool are growth teams using to turn live web audits into board-ready strategy decks? Need 100% grounded evidence, not generic chat prompts."
+                          &quot;What tool are growth teams using to turn live web audits into board-ready strategy decks? Need 100% grounded evidence, not generic chat prompts.&quot;
                         </p>
                         <p className="text-[11px] text-slate-400 italic">
-                          "Evaluating new autonomous marketing engines this week. Who has cracked multi-agent voice consistency across channels? Drop recs 👇"
+                          &quot;Evaluating new autonomous marketing engines this week. Who has cracked multi-agent voice consistency across channels? Drop recs 👇&quot;
                         </p>
                       </div>
 
@@ -727,7 +727,7 @@ export function ScrollytellingEightLayers() {
                       <div className="mt-2.5 flex items-center justify-between text-[10px] text-slate-400">
                         <span className="flex items-center gap-1 text-purple-300 font-medium">
                           <span>🎯 Trigger:</span>
-                          <span className="text-slate-300">"evaluating new autonomous marketing engines"</span>
+                          <span className="text-slate-300">&quot;evaluating new autonomous marketing engines&quot;</span>
                         </span>
                         <span className="text-purple-400 font-mono font-bold">DM Hook Prepared</span>
                       </div>
