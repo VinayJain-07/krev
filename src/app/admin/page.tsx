@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { hasAdminSession } from "@/lib/admin/session";
@@ -31,48 +32,113 @@ export default async function AdminPage() {
   if (!(await hasAdminSession())) redirect("/admin/login");
   const sevenDaysAgo = recentWindowStart();
 
-  const [totalUsers, totalCompanies, loggedInUsers, recentUsers, users, recentActivity, companyViews] = await Promise.all([
-    db.user.count(),
-    db.company.count(),
-    db.activityEvent.groupBy({ by: ["userId"], where: { kind: "LOGIN" } }),
-    db.activityEvent.groupBy({ by: ["userId"], where: { kind: "LOGIN", createdAt: { gte: sevenDaysAgo } } }),
-    db.user.findMany({
+  let totalUsers = 0;
+  let totalCompanies = 0;
+  let loggedInUsers: { userId: string }[] = [];
+  let recentUsers: { userId: string }[] = [];
+  let users: any[] = [];
+  let recentActivity: any[] = [];
+  let companyViews: { companyId: string | null; _count: { companyId: number } }[] = [];
+
+  try {
+    totalUsers = await db.user.count();
+  } catch {}
+
+  try {
+    totalCompanies = await db.company.count();
+  } catch {}
+
+  try {
+    users = await db.user.findMany({
       orderBy: { createdAt: "desc" },
       select: {
-        id: true, name: true, email: true, createdAt: true,
-        companies: { take: 12, orderBy: { createdAt: "desc" }, select: { id: true, name: true, normalizedDomain: true, createdAt: true } },
-        activityEvents: { where: { kind: "LOGIN" }, take: 1, orderBy: { createdAt: "desc" }, select: { createdAt: true } },
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true,
+        companies: {
+          take: 12,
+          orderBy: { createdAt: "desc" },
+          select: { id: true, name: true, normalizedDomain: true, createdAt: true },
+        },
+        activityEvents: {
+          where: { kind: "LOGIN" },
+          take: 1,
+          orderBy: { createdAt: "desc" },
+          select: { createdAt: true },
+        },
         _count: { select: { companies: true } },
       },
-    }),
-    db.activityEvent.findMany({
+    });
+  } catch {
+    try {
+      users = await db.user.findMany({
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          createdAt: true,
+          companies: {
+            take: 12,
+            orderBy: { createdAt: "desc" },
+            select: { id: true, name: true, normalizedDomain: true, createdAt: true },
+          },
+          _count: { select: { companies: true } },
+        },
+      });
+    } catch {}
+  }
+
+  try {
+    loggedInUsers = (await (db.activityEvent as any).groupBy({ by: ["userId"], where: { kind: "LOGIN" } })) ?? [];
+  } catch {}
+
+  try {
+    recentUsers = (await (db.activityEvent as any).groupBy({ by: ["userId"], where: { kind: "LOGIN", createdAt: { gte: sevenDaysAgo } } })) ?? [];
+  } catch {}
+
+  try {
+    recentActivity = await db.activityEvent.findMany({
       take: 80,
       orderBy: { createdAt: "desc" },
       select: {
-        id: true, kind: true, detail: true, createdAt: true,
+        id: true,
+        kind: true,
+        detail: true,
+        createdAt: true,
         user: { select: { name: true, email: true } },
         company: { select: { name: true, normalizedDomain: true } },
       },
-    }),
-    db.activityEvent.groupBy({
+    });
+  } catch {}
+
+  try {
+    companyViews = (await (db.activityEvent as any).groupBy({
       by: ["companyId"],
       where: { kind: "COMPANY_VIEWED", companyId: { not: null } },
       _count: { companyId: true },
       orderBy: { _count: { companyId: "desc" } },
       take: 12,
-    }),
-  ]);
+    })) ?? [];
+  } catch {}
 
-  const interestCompanies = await db.company.findMany({
-    where: { id: { in: companyViews.flatMap((item) => item.companyId ? [item.companyId] : []) } },
-    select: { id: true, name: true, normalizedDomain: true, user: { select: { email: true } } },
-  });
-  const companyById = new Map(interestCompanies.map((company) => [company.id, company]));
+  let interestCompanies: any[] = [];
+  try {
+    const ids = companyViews.flatMap((item: any) => (item.companyId ? [item.companyId] : []));
+    if (ids.length > 0) {
+      interestCompanies = await db.company.findMany({
+        where: { id: { in: ids } },
+        select: { id: true, name: true, normalizedDomain: true, user: { select: { email: true } } },
+      });
+    }
+  } catch {}
+  const companyById = new Map(interestCompanies.map((company: any) => [company.id, company]));
 
   return <main className="admin-shell">
     <header className="admin-header">
       <div><span className="admin-eyebrow">SMARK CONNECT / OWNER VIEW</span><h1>Registered accounts</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
-      <div className="admin-header-actions"><AdminRefresh /><form action={adminSignOut}><button type="submit">Sign out</button></form></div>
+      <div className="admin-header-actions"><Link href="/" className="admin-nav-back">Back to app</Link><AdminRefresh /><form action={adminSignOut}><button type="submit">Sign out</button></form></div>
     </header>
 
     <div className="admin-body">
@@ -89,11 +155,11 @@ export default async function AdminPage() {
         <section className="admin-panel admin-people">
           <div className="admin-panel-heading"><div><span>ACCOUNT DIRECTORY</span><h2>All registered accounts</h2></div><small>Showing all {users.length.toLocaleString()} accounts</small></div>
           <div className="admin-table-wrap"><table><thead><tr><th>Account</th><th>Joined on</th><th>Companies</th><th>Last sign-in</th></tr></thead><tbody>
-            {users.map((user) => <tr key={user.id}>
+            {users.map((user: any) => <tr key={user.id}>
               <td><strong>{user.name || "Unnamed user"}</strong><small>{user.email}</small></td>
               <td>{when(user.createdAt)}</td>
-              <td><strong className="admin-company-count">{user._count.companies.toLocaleString()}</strong><div className="admin-company-tags">{user.companies.map((company) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}{user._count.companies > user.companies.length && <span>+{user._count.companies - user.companies.length} more</span>}</div></td>
-              <td>{when(user.activityEvents[0]?.createdAt)}</td>
+              <td><strong className="admin-company-count">{user._count.companies.toLocaleString()}</strong><div className="admin-company-tags">{user.companies.map((company: any) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}{user._count.companies > user.companies.length && <span>+{user._count.companies - user.companies.length} more</span>}</div></td>
+              <td>{when(user.activityEvents?.[0]?.createdAt)}</td>
             </tr>)}
             {!users.length && <tr><td colSpan={4} className="admin-empty">No accounts yet.</td></tr>}
           </tbody></table></div>

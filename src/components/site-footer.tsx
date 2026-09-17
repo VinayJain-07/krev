@@ -144,6 +144,11 @@ export function SiteFooter() {
                     Privacy & Terms
                   </Link>
                 </li>
+                <li>
+                  <Link href="/admin" className="hover:text-white transition-colors opacity-70 hover:opacity-100">
+                    Admin Portal
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>

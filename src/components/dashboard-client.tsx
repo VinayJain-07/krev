@@ -1042,7 +1042,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
         connectionSummary={<ConnectionStrip data={data} />}
       />
 
-      <nav className="dashboard-actions"><Link href={`/dashboard/${data.company.id}/reporting`}>Reporting</Link><Link href={`/dashboard/${data.company.id}/visuals`}>Visual Studio</Link><button type="button" className="topbar-source-button" onClick={() => setShowSources(true)} aria-label={`Add source documents. ${sources.length} currently included`} title="Add source documents"><Plus size={16} /><span>Sources</span>{sources.length > 0 && <em>{sources.length}</em>}</button><Link href="/settings/credits" aria-label="Settings"><Settings size={16} /></Link><span className="avatar-small">{(data.user.name ?? data.user.email).slice(0, 2).toUpperCase()}</span><LogoutButton /></nav>
+      <nav className="dashboard-actions"><Link href={`/dashboard/${data.company.id}/reporting`}>Reporting</Link><Link href={`/dashboard/${data.company.id}/visuals`}>Visual Studio</Link><button type="button" className="topbar-source-button" onClick={() => setShowSources(true)} aria-label={`Add source documents. ${sources.length} currently included`} title="Add source documents"><Plus size={16} /><span>Sources</span>{sources.length > 0 && <em>{sources.length}</em>}</button><Link href="/admin" title="Admin dashboard">Admin</Link><Link href="/settings/credits" aria-label="Settings"><Settings size={16} /></Link><span className="avatar-small">{(data.user.name ?? data.user.email).slice(0, 2).toUpperCase()}</span><LogoutButton /></nav>
     </header>
 
     <section className="dashboard-grid" ref={workspaceRef} style={gridStyle}>

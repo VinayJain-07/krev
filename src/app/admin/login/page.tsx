@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { adminSignIn } from "../actions";
 import { hasAdminSession } from "@/lib/admin/session";
@@ -8,7 +9,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   const message = error === "locked"
     ? "Too many attempts. Try again in 15 minutes."
     : error === "config"
-      ? "Admin access has not been configured on this server."
+      ? "Admin access is being initialized on this server."
       : error === "invalid"
         ? "That password is incorrect."
         : null;
@@ -20,11 +21,14 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
       <p>View account sign-ins, company interest, and recent workspace activity.</p>
       <form action={adminSignIn}>
         <label htmlFor="admin-password">Admin password</label>
-        <input id="admin-password" name="password" type="password" autoComplete="current-password" required minLength={8} autoFocus />
+        <input id="admin-password" name="password" type="password" autoComplete="current-password" required minLength={4} autoFocus placeholder="Enter admin password" />
         {message && <p className="admin-form-error" role="alert">{message}</p>}
         <button type="submit">Open dashboard</button>
       </form>
-      <small>Access expires after eight hours.</small>
+      <div style={{ marginTop: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+        <Link href="/" style={{ color: "#79429c", textDecoration: "none", fontWeight: 600 }}>← Back to app</Link>
+        <small style={{ color: "#928497", fontSize: "11px" }}>Access expires after 8 hours</small>
+      </div>
     </section>
   </main>;
 }
