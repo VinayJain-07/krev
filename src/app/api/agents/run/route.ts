@@ -2,8 +2,8 @@ import type { AgentType, Prisma } from "@prisma/client";
 import { z } from "zod";
 import { requireApiUser } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
-import { runAgentAnalysis } from "@/lib/skills/runner";
-import { AGENT_DEFINITIONS } from "@/lib/skills/registry";
+import { runAgentAnalysis } from "@/lib/nodes/runner";
+import { AGENT_DEFINITIONS } from "@/lib/nodes/registry";
 
 const allowedAgents = AGENT_DEFINITIONS.map((agent) => agent.type) as [string, ...string[]];
 const schema = z.object({ companyId: z.string().min(1), agentType: z.enum(allowedAgents) });

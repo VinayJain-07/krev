@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { CORE_DOCUMENTS, INITIAL_AGENT_TYPES } from "../src/lib/skills/registry";
-import { buildEvidencePack, deriveResearchTopics, runAgentAnalysis, runCmoSynthesis, runCoreDocument, saveCoreAnalysis } from "../src/lib/skills/runner";
+import { CORE_DOCUMENTS, INITIAL_AGENT_TYPES } from "../src/lib/nodes/registry";
+import { buildEvidencePack, deriveResearchTopics, runAgentAnalysis, runCmoSynthesis, runCoreDocument, saveCoreAnalysis } from "../src/lib/nodes/runner";
 
 process.loadEnvFile?.(".env.local");
 const db = new PrismaClient();

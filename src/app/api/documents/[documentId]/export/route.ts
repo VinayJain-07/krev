@@ -7,7 +7,7 @@ import { createBrandedXlsx } from "@/lib/documents/xlsx";
 import type { VisualReportCompetitor } from "@/lib/documents/pdf";
 import { normalizeDocumentMarkdown, safeFilename } from "@/lib/documents/content";
 import { fetchCompanyLogoAsset } from "@/lib/company-logo";
-import { CORE_DOCUMENTS } from "@/lib/skills/registry";
+import { CORE_DOCUMENTS } from "@/lib/nodes/registry";
 import { createCompanyBrief } from "@/lib/company-brief";
 import { buildReportDataModel } from "@/lib/artifacts/model";
 import { canonicalReportType, isArtifactEnabled, resolveArtifactManifest } from "@/lib/artifacts/config";

@@ -2,7 +2,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
 import { createVisualReport } from "../src/lib/documents/pdf";
-import { CORE_DOCUMENTS } from "../src/lib/skills/registry";
+import { CORE_DOCUMENTS } from "../src/lib/nodes/registry";
 
 process.loadEnvFile?.(".env.local");
 const db = new PrismaClient();

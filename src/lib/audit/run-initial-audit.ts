@@ -1,7 +1,7 @@
 import { db } from "@/lib/db";
 import { crawlWebsite } from "@/lib/crawl/crawler";
-import { buildEvidencePack, deriveResearchTopics, runAgentAnalysis, runCmoSynthesis, runCoreDocument, saveCoreAnalysis } from "@/lib/skills/runner";
-import { AUDIT_DOCUMENT_QUEUE, AUDIT_PRIORITY_DOCUMENT_TYPES, INITIAL_AGENT_TYPES } from "@/lib/skills/registry";
+import { buildEvidencePack, deriveResearchTopics, runAgentAnalysis, runCmoSynthesis, runCoreDocument, saveCoreAnalysis } from "@/lib/nodes/runner";
+import { AUDIT_DOCUMENT_QUEUE, AUDIT_PRIORITY_DOCUMENT_TYPES, INITIAL_AGENT_TYPES } from "@/lib/nodes/registry";
 import { runPageSpeed } from "./pagespeed";
 
 async function setProgress(jobId: string, companyId: string, progress: number, step: string) {

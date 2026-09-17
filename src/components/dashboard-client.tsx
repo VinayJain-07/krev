@@ -9,7 +9,7 @@ import remarkGfm from "remark-gfm";
 import type { DocumentType } from "@prisma/client";
 import { Activity, AlertTriangle, Bot, Check, CheckCircle2, ChevronDown, ChevronRight, CirclePlus, Clock3, Copy, ExternalLink, FileText, Globe2, GripVertical, HelpCircle, LayoutGrid, Link2, Lock, MessageCircle, Monitor, PanelLeftClose, PanelLeftOpen, Paperclip, Pencil, Plus, Radio, RefreshCw, RotateCcw, Send, Settings, Smartphone, Sparkles, Trash2, UploadCloud, XCircle, Zap, X as CloseIcon } from "lucide-react";
 import { StreamingTerminal, type TerminalLog } from "./streaming-terminal";
-import { AGENT_DEFINITIONS, EXTENDED_DOCUMENTS, getDocumentDefinition } from "@/lib/skills/registry";
+import { AGENT_DEFINITIONS, EXTENDED_DOCUMENTS, getDocumentDefinition } from "@/lib/nodes/registry";
 import { normalizeAcronyms, unwrapStructuredText } from "@/lib/text-format";
 import { evaluateLinkedInOpportunity, evaluateRedditCandidate, evaluateXOpportunity, scoreOpportunity, type RedditActionFeedOpportunity } from "@/lib/signals/store";
 import { RedditOpportunityFeed } from "./reddit-opportunity-feed";

@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import { describe, expect, it, vi } from "vitest";
-import { ALL_DOCUMENTS } from "../skills/registry";
+import { ALL_DOCUMENTS } from "../nodes/registry";
 import { ARTIFACT_PROFILES, resolveArtifactManifest } from "../artifacts/config";
 import { buildReportDataModel } from "../artifacts/model";
 import { documentOutputContract } from "./output-contract";

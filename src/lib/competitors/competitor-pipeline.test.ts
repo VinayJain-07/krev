@@ -4,7 +4,7 @@ vi.mock("server-only", () => ({}));
 vi.mock("../company-logo", () => ({ resolveCompanyLogo: async () => null }));
 
 import { analyzeCompetitorLandscape, rankLiveCompetitorCandidates } from "./analyzer";
-import { synthesizeSkillsAndFindings } from "./skills-synthesizer";
+import { synthesizeSkillsAndFindings } from "./nodes-synthesizer";
 import type { CompanyStrategicProfile } from "./types";
 
 const mockProfile: CompanyStrategicProfile = {

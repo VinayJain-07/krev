@@ -1,4 +1,4 @@
-import { ALL_DOCUMENTS, AGENT_DEFINITIONS } from "../skills/registry";
+import { ALL_DOCUMENTS, AGENT_DEFINITIONS } from "../nodes/registry";
 
 // Internal provenance remains in metadata; it is never report content.
 const identifiers = Array.from(new Set([

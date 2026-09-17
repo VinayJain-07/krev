@@ -1,9 +1,8 @@
 import "server-only";
 import { db } from "../db";
 import { buildCompanyStrategicProfile } from "../competitors/company-profiler";
-import { deriveResearchTopics } from "../skills/runner";
+import { deriveResearchTopics, completeAnalysis } from "../nodes/runner";
 import { discoverLiveResearch } from "../research/live-discovery";
-import { completeAnalysis } from "../skills/runner";
 import type { Finding } from "@/components/dashboard-client";
 
 export async function runAudienceIntelligencePipeline(args: {

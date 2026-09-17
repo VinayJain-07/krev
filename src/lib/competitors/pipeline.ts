@@ -1,10 +1,10 @@
 import "server-only";
 import { db } from "../db";
-import { deriveResearchTopics } from "../skills/runner";
+import { deriveResearchTopics } from "../nodes/runner";
 import { discoverLiveResearch } from "../research/live-discovery";
 import { buildCompanyStrategicProfile } from "./company-profiler";
 import { analyzeCompetitorLandscape } from "./analyzer";
-import { synthesizeSkillsAndFindings } from "./skills-synthesizer";
+import { synthesizeNodesAndFindings } from "./nodes-synthesizer";
 import type { CompetitorIntelligencePayload } from "./types";
 
 /**
@@ -69,8 +69,8 @@ export async function runCompetitorIntelligencePipeline(args: {
     llmConfig
   );
 
-  // 5. Run Skills Synthesis across installed skills into normalized findings and merged action items
-  const { findings, actionItems } = synthesizeSkillsAndFindings(companyProfile, competitors);
+  // 5. Run Nodes Synthesis across installed nodes into normalized findings and merged action items
+  const { findings, actionItems } = synthesizeNodesAndFindings(companyProfile, competitors);
 
   // 6. Formulate high-level summaries
   const compNames = competitors.map((c) => c.name).join(", ");

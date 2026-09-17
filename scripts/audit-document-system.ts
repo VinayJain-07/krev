@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { ALL_DOCUMENTS, AGENT_DEFINITIONS } from "../src/lib/skills/registry";
+import { ALL_DOCUMENTS, AGENT_DEFINITIONS } from "../src/lib/nodes/registry";
 import { resolveArtifactManifest } from "../src/lib/artifacts/config";
 import { DOCUMENT_SCOPE } from "../src/lib/documents/output-contract";
 

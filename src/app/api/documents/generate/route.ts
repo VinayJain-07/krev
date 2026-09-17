@@ -2,8 +2,8 @@ import { z } from "zod";
 import type { DocumentType } from "@prisma/client";
 import { requireApiUser } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
-import { ALL_DOCUMENTS, getDocumentDefinition } from "@/lib/skills/registry";
-import { buildEvidencePack, deriveResearchTopics, runCoreDocument, saveCoreAnalysis } from "@/lib/skills/runner";
+import { ALL_DOCUMENTS, getDocumentDefinition } from "@/lib/nodes/registry";
+import { buildEvidencePack, deriveResearchTopics, runCoreDocument, saveCoreAnalysis } from "@/lib/nodes/runner";
 import { withoutSkillProvenance } from "@/lib/documents/public";
 
 const allowed = ALL_DOCUMENTS.map((document) => document.type) as [string, ...string[]];

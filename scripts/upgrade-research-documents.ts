@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { ALL_DOCUMENTS } from "../src/lib/skills/registry";
-import { appendCompleteResearchAppendix } from "../src/lib/skills/runner";
+import { ALL_DOCUMENTS } from "../src/lib/nodes/registry";
+import { appendCompleteResearchAppendix } from "../src/lib/nodes/runner";
 
 process.loadEnvFile?.(".env.local");
 const db = new PrismaClient();

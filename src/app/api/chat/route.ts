@@ -3,8 +3,8 @@ import { requireApiUser } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
 import { decryptSecret } from "@/lib/crypto";
 import { getProvider } from "@/lib/llm";
-import { loadSkillPack } from "@/lib/skills/loader";
-import { getInternalOperation } from "@/lib/skills/registry";
+import { loadSkillPack } from "@/lib/nodes/loader";
+import { getInternalOperation } from "@/lib/nodes/registry";
 import { buildUploadedSourceEvidence } from "@/lib/sources/content";
 
 const schema = z.object({ companyId: z.string().min(1), sessionId: z.string().optional(), message: z.string().trim().min(1).max(5000) });

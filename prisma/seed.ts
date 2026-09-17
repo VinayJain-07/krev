@@ -1,7 +1,7 @@
 import { PrismaClient, type AgentType, type DocumentType } from "@prisma/client";
 import { hash } from "bcryptjs";
 import { encryptSecret } from "../src/lib/crypto-core";
-import { getAgentDefinition, getDocumentDefinition } from "../src/lib/skills/registry";
+import { getAgentDefinition, getDocumentDefinition } from "../src/lib/nodes/registry";
 
 process.loadEnvFile?.(".env.local");
 const db = new PrismaClient();

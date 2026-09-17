@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
-import { buildEvidencePack, runCoreDocument, saveCoreAnalysis } from "../src/lib/skills/runner";
-import { CORE_DOCUMENTS } from "../src/lib/skills/registry";
+import { buildEvidencePack, runCoreDocument, saveCoreAnalysis } from "../src/lib/nodes/runner";
+import { CORE_DOCUMENTS } from "../src/lib/nodes/registry";
 
 process.loadEnvFile?.(".env.local");
 const db = new PrismaClient();
