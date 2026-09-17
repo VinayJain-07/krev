@@ -25,6 +25,8 @@
 # misc
 .DS_Store
 *.pem
+*.key
+git-crypt.key
 
 # debug
 npm-debug.log*

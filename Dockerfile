@@ -11,6 +11,8 @@ ENV SMARK_REPORT_PYTHON="/opt/smark-report-venv/bin/python"
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
+        git \
+        git-crypt \
         chromium \
         fonts-dejavu-core \
         fonts-liberation \
@@ -38,6 +40,13 @@ COPY prisma ./prisma
 RUN pnpm install --frozen-lockfile
 
 COPY . .
+
+ARG GIT_CRYPT_KEY
+RUN if [ -n "$GIT_CRYPT_KEY" ]; then \
+      echo "$GIT_CRYPT_KEY" | base64 -d > /tmp/git-crypt.key && \
+      git-crypt unlock /tmp/git-crypt.key && \
+      rm -f /tmp/git-crypt.key; \
+    fi
 
 RUN python3 -m venv /opt/smark-report-venv \
     && /opt/smark-report-venv/bin/pip install --no-cache-dir --upgrade pip \

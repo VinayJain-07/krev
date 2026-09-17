@@ -1,0 +1,13 @@
+﻿# Git-crypt transparent encryption for proprietary nodes and vendor libraries
+nodes/** filter=git-crypt diff=git-crypt
+vendor/nodes/** filter=git-crypt diff=git-crypt
+
+# Ensure metadata, configuration, and scripts remain plaintext
+.gitattributes !filter !diff
+.gitignore !filter !diff
+package.json !filter !diff
+pnpm-lock.yaml !filter !diff
+Dockerfile !filter !diff
+README.md !filter !diff
+vitest.config.mts !filter !diff
+tsconfig.json !filter !diff
