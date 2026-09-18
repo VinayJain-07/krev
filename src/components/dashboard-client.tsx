@@ -585,6 +585,11 @@ function SourceDrawer({ companyName, sources, uploading, dragActive, error, inpu
       </header>
       <div
         className={`source-drop-zone ${dragActive ? "drag-active" : ""}`}
+        onClick={(event) => {
+          if ((event.target as HTMLElement).tagName !== "BUTTON") {
+            inputRef.current?.click();
+          }
+        }}
         onDragEnter={(event) => { event.preventDefault(); onDragActive(true); }}
         onDragOver={(event) => event.preventDefault()}
         onDragLeave={(event) => { if (!event.currentTarget.contains(event.relatedTarget as Node)) onDragActive(false); }}
@@ -594,7 +599,7 @@ function SourceDrawer({ companyName, sources, uploading, dragActive, error, inpu
         <UploadCloud size={24} aria-hidden="true" />
         <strong>{uploading ? "Reading your documents…" : "Drop source documents here"}</strong>
         <span>or</span>
-        <button type="button" disabled={uploading} onClick={() => inputRef.current?.click()}>{uploading ? <RefreshCw className="spin" size={14} /> : <Plus size={14} />} Choose files</button>
+        <button type="button" disabled={uploading} onClick={(e) => { e.stopPropagation(); inputRef.current?.click(); }}>{uploading ? <RefreshCw className="spin" size={14} /> : <Plus size={14} />} Choose files</button>
         <small>PDF, DOCX, PPTX, XLSX, Markdown, text, CSV, JSON, HTML, OpenDocument and more · 15 MB each</small>
       </div>
       {error && <p className="source-error" role="alert"><AlertTriangle size={14} />{error}</p>}
@@ -652,6 +657,12 @@ export function DashboardClient({ data }: { data: DashboardData }) {
   const [chatPending, setChatPending] = useState(false);
   const [sessionId, setSessionId] = useState<string | undefined>(data.chat?.sessionId);
   const geoRun = data.agents.find((item) => item.agentType === "GEO");
+
+  // Reset manual competitors when the selected company changes
+  useEffect(() => {
+    setManualCompetitors(savedManualCompetitors(data.agentConfigs));
+  }, [data.company.id, data.agentConfigs]);
+
   const competitorItems = useMemo(() => {
     const agentCompetitors = extractContextCompetitorsFromAgentOutput(data.agents.find((item) => item.agentType === "COMPETITOR")?.output);
     const documentCompetitors = (documents.find((d) => d.type === "COMPETITOR_ANALYSIS")?.metadata as { competitors?: Finding[] } | null)?.competitors ?? [];
@@ -1057,6 +1068,52 @@ export function DashboardClient({ data }: { data: DashboardData }) {
           </div>
         </div>
         <section className="pane-section"><div className="section-label-row"><p className="section-label">CORE DOCUMENTS</p><span>{documents.filter((item) => coreDocumentOrder.includes(item.type)).length}/6</span></div><div className="document-list">{coreDocumentOrder.map((type) => { const document = documents.find((item) => item.type === type); return document ? <button type="button" key={type} onClick={() => setSelectedDocument(document)}><ModuleIcon type={type} size={14} /><span className="document-row-title">{document.title}</span><small>v{document.version}</small><ChevronRight size={13} /><span className="document-hover-detail" role="tooltip"><strong>{document.title}</strong><span>{documentPreview(document) || "Open this document to review its complete evidence and recommendations."}{document.contentMarkdown.length > 190 ? "…" : ""}</span><em>{document.tokenEstimate.toLocaleString()} tokens · Updated {new Date(document.updatedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</em></span></button> : <button className="pending-document p0-triggerable" type="button" key={type} disabled={Boolean(generatingDocument)} onClick={() => prioritizeDocument(type, coreDocumentLabels[type])} title="Click to elevate to P0 and compile immediately"><ModuleIcon type={type} size={14} /><span>{coreDocumentLabels[type]}</span><small className="p0-action-tag">{generatingDocument === type ? <RefreshCw className="spin" size={10} /> : <Zap size={10} />}{generatingDocument === type ? "Compiling" : "P0"}</small></button>; })}</div></section>
+        <section className="pane-section context-sources">
+          <div className="section-label-row">
+            <p className="section-label">SOURCE DOCUMENTS</p>
+            <span>{sources.length ? `${sources.length} uploaded` : "0 sources"}</span>
+            <button
+              type="button"
+              className="sources-add-btn"
+              onClick={() => setShowSources(true)}
+              title="Add or manage source documents"
+              aria-label="Add or manage source documents"
+            >
+              <Plus size={13} />
+            </button>
+          </div>
+          {sources.length ? (
+            <div className="context-source-list">
+              {sources.map((source) => (
+                <article key={source.id} className="context-source-item">
+                  <FileText size={14} className="context-source-icon" />
+                  <div className="context-source-info">
+                    <strong title={source.title}>{source.title}</strong>
+                    <small>{source.sourceType.toUpperCase()} · {source.characterCount.toLocaleString()} chars</small>
+                  </div>
+                  <button
+                    type="button"
+                    className="context-source-remove"
+                    onClick={() => void removeSource(source)}
+                    title={`Remove ${source.title}`}
+                    aria-label={`Remove ${source.title}`}
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className="context-source-empty" onClick={() => setShowSources(true)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setShowSources(true); }}>
+              <UploadCloud size={16} />
+              <div>
+                <strong>Add source evidence</strong>
+                <small>Upload PDFs, DOCX, CSVs or briefs to ground all reports and AI outputs.</small>
+              </div>
+              <button type="button" onClick={(e) => { e.stopPropagation(); setShowSources(true); }}>Upload</button>
+            </div>
+          )}
+        </section>
         <section className="pane-section context-competitors">
           <div className="section-label-row"><p className="section-label">COMPETITORS &amp; ALTERNATIVES</p><span>{competitorItems.length ? `${competitorItems.length} tracked` : "Discovery pending"}</span><button type="button" className="competitors-add" onClick={() => { setCompetitorAddError(""); setShowCompetitorAdd((open) => !open); }} title="Add competitor" aria-label="Add competitor"><Plus size={13} /></button><button type="button" className="competitors-refresh" disabled={Boolean(runningAgent)} onClick={() => runAgent("COMPETITOR")} title="Refresh competitor research" aria-label="Refresh competitor research"><RefreshCw className={runningAgent === "COMPETITOR" ? "spin" : ""} size={12} /></button></div>
           {showCompetitorAdd && <form className="competitor-quick-add" onSubmit={addManualCompetitor} aria-label="Add competitor manually">

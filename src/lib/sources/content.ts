@@ -112,22 +112,43 @@ export async function extractSourceContent(file: File): Promise<string> {
   }
 
   const abortController = new AbortController();
-  const timeout = setTimeout(() => abortController.abort(), 25_000);
+  const timeout = setTimeout(() => abortController.abort(), 30_000);
   try {
-    const { OfficeConverter } = await import("officeparser");
+    const officeModule = await import("officeparser");
     const fileType = extension.slice(1) as "pdf" | "docx" | "pptx" | "xlsx" | "odt" | "odp" | "ods" | "rtf" | "epub";
-    const result = await OfficeConverter.convert(Buffer.from(await file.arrayBuffer()), "md", {
-      parseConfig: {
-        fileType,
+    const buffer = Buffer.from(await file.arrayBuffer());
+    let extractedRaw = "";
+
+    // 1. Try OfficeParser.parseOffice or parseOffice AST parser
+    if (typeof officeModule.parseOffice === "function") {
+      const ast = await officeModule.parseOffice(buffer, {
         abortSignal: abortController.signal,
-        ignoreComments: true,
         extractAttachments: false,
-      },
-      generatorConfig: {
-        includeImages: false,
-      },
-    });
-    const text = normalizeExtractedText(String(result.value ?? ""));
+      });
+      extractedRaw = typeof ast?.toText === "function" ? ast.toText() : String(ast ?? "");
+    } else if (officeModule.OfficeParser && typeof officeModule.OfficeParser.parseOffice === "function") {
+      const ast = await officeModule.OfficeParser.parseOffice(buffer, {
+        abortSignal: abortController.signal,
+        extractAttachments: false,
+      });
+      extractedRaw = typeof ast?.toText === "function" ? ast.toText() : String(ast ?? "");
+    } else if (officeModule.OfficeConverter && typeof officeModule.OfficeConverter.convert === "function") {
+      // 2. Try OfficeConverter.convert
+      const result = await officeModule.OfficeConverter.convert(buffer, "md", {
+        parseConfig: {
+          fileType,
+          abortSignal: abortController.signal,
+          ignoreComments: true,
+          extractAttachments: false,
+        },
+        generatorConfig: {
+          includeImages: false,
+        },
+      });
+      extractedRaw = String(result?.value ?? "");
+    }
+
+    const text = normalizeExtractedText(extractedRaw);
     if (!text) throw new Error(`No readable text was found in ${file.name}. Scanned documents need selectable text.`);
     return text;
   } catch (error) {
