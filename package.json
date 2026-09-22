@@ -16,6 +16,7 @@
     "nodes:validate": "tsx scripts/validate-node-registry.ts",
     "skills:validate": "tsx scripts/validate-node-registry.ts",
     "documents:audit": "tsx scripts/audit-document-system.ts",
+    "docs:generate": "node scripts/generate-docs-docx.js",
     "artifacts:qa": "node --conditions=react-server --import tsx scripts/qa-artifact-orchestrator.ts",
     "report:setup": "python -m venv .venv-report && .venv-report\\Scripts\\python.exe -m pip install -r requirements-report.txt",
     "smoke": "tsx scripts/smoke-app.ts",

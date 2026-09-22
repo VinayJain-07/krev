@@ -64,12 +64,13 @@ export async function createAdminSession(): Promise<void> {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
-    path: "/admin",
+    path: "/",
     maxAge: lifetimeSeconds,
   });
 }
 
 export async function clearAdminSession(): Promise<void> {
   const cookieStore = await cookies();
+  cookieStore.delete({ name: cookieName, path: "/" });
   cookieStore.delete(cookieName);
 }

@@ -145,8 +145,8 @@ export function SiteFooter() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/admin" className="hover:text-white transition-colors opacity-70 hover:opacity-100">
-                    Admin Portal
+                  <Link href="/404" className="hover:text-white transition-colors opacity-70 hover:opacity-100">
+                    404 page
                   </Link>
                 </li>
               </ul>

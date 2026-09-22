@@ -1,0 +1,43 @@
+#!/bin/sh
+# Git Pre-Push Hook: Guard against automated / agent direct pushes
+# Repository: thesmarketers/Smark-Connect
+
+if [ "$MANUAL_PUSH_CONFIRMED" = "1" ] || [ "$MANUAL_PUSH_CONFIRMED" = "true" ]; then
+    exit 0
+fi
+
+# Check if running in an interactive terminal
+if [ -t 0 ] && [ -t 1 ]; then
+    echo ""
+    echo "================================================================"
+    echo " 🛡️  SECURITY GUARD: MANUAL PUSH CONFIRMATION REQUIRED"
+    echo "================================================================"
+    echo " Direct changes from AI coding agents are restricted."
+    echo " You are attempting to push to remote: $1 ($2)"
+    echo ""
+    printf " Confirm manual human push to remote repository? [y/N]: "
+    read -r response
+    case "$response" in
+        [yY][eE][sS]|[yY])
+            echo "✅ Manual push confirmed by developer."
+            exit 0
+            ;;
+        *)
+            echo "❌ Push aborted by user."
+            exit 1
+            ;;
+    esac
+fi
+
+# If non-interactive (e.g. executed by an AI agent or script without manual confirmation flag):
+echo ""
+echo "=========================================================================="
+echo " 🛑 DIRECT REPOSITORY PUSH BLOCKED BY SECURITY POLICY"
+echo "=========================================================================="
+echo " Coding agents are strictly forbidden from directly pushing to this repo."
+echo " All pushes must be performed manually by a verified human developer."
+echo ""
+echo " To push manually from a script/terminal, set:"
+echo "   export MANUAL_PUSH_CONFIRMED=1 (Linux/macOS) or \$env:MANUAL_PUSH_CONFIRMED='1' (PowerShell)"
+echo "=========================================================================="
+exit 1
