@@ -400,7 +400,7 @@ export function DocumentWorkspace({
                 <button type="button" disabled={pending || document.locked} onClick={() => void repairDocument()}>{pending ? "Repairing report…" : "Repair report"}</button>
                 {error && <p className="form-error">{error}</p>}
               </div> : <article className="document-page">
-                <div className="document-kicker">THE SMARKETERS / AI CMO REPORT</div>
+                <div className="document-kicker">KREV AI / AI CMO REPORT</div>
                 <div className="markdown-render-flow">
                   <ReactMarkdown
                     remarkPlugins={[remarkGfm]}
@@ -423,7 +423,7 @@ export function DocumentWorkspace({
                   </ReactMarkdown>
                 </div>
                 <footer>
-                  <span>Smark Connect</span>
+                  <span>KREV AI</span>
                   <span>Professionally formatted on export</span>
                 </footer>
               </article>
@@ -456,7 +456,7 @@ export function DocumentWorkspace({
                 <>
                   <div className="pdf-preview-success" role="status">
                     <CheckCircle2 size={14} />
-                    <span>Your A4 Smarketers Executive PDF is ready to preview and download.</span>
+                    <span>Your A4 KREV AI Executive PDF is ready to preview and download.</span>
                   </div>
                   <iframe
                     title={`${document.title} PDF preview`}
@@ -493,7 +493,7 @@ export function DocumentWorkspace({
               <textarea
                 value={prompt}
                 onChange={(event) => setPrompt(event.target.value)}
-                placeholder="Ask Smark Connect to strengthen a section, add evidence, change tone, or restructure this report…"
+                placeholder="Ask KREV AI to strengthen a section, add evidence, change tone, or restructure this report…"
                 rows={3}
               />
               <div className="editor-controls">

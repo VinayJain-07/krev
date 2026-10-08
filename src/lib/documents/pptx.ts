@@ -43,7 +43,7 @@ function priorityColor(value: string) {
 
 function addFooter(slide: PptxGenJS.Slide, model: ReportDataModel, page: number) {
   slide.addShape("line", { x: 0.65, y: 7.12, w: 12.02, h: 0, line: { color: COLORS.line, width: 0.75 } });
-  slide.addText("THE SMARKETERS / SMARK CONNECT", { x: 0.68, y: 7.18, w: 4.2, h: 0.18, fontFace: "Arial", fontSize: 8, bold: true, color: COLORS.violet, margin: 0, charSpacing: 1.4 });
+  slide.addText("KREV AI / AI CMO", { x: 0.68, y: 7.18, w: 4.2, h: 0.18, fontFace: "Arial", fontSize: 8, bold: true, color: COLORS.violet, margin: 0, charSpacing: 1.4 });
   slide.addText(`${model.reportPeriod.label}  ·  ${page}`, { x: 10.25, y: 7.18, w: 2.4, h: 0.18, fontFace: "Arial", fontSize: 8, color: COLORS.slate, align: "right", margin: 0 });
 }
 
@@ -68,8 +68,8 @@ function addMetric(slide: PptxGenJS.Slide, x: number, label: string, value: stri
 export async function createExecutivePptx({ model, manifest }: PresentationArgs): Promise<Buffer> {
   const pptx = new PptxGenJS();
   pptx.layout = "LAYOUT_WIDE";
-  pptx.author = "Smark Connect";
-  pptx.company = "The Smarketers";
+  pptx.author = "KREV AI";
+  pptx.company = "KREV AI";
   pptx.subject = `${manifest.theme} executive decision presentation`;
   pptx.title = `${model.company.name} - ${model.title}`;
   pptx.theme = {
@@ -83,7 +83,7 @@ export async function createExecutivePptx({ model, manifest }: PresentationArgs)
   cover.background = { color: COLORS.violet };
   cover.addShape("rect", { x: 9.5, y: 0, w: 3.83, h: 7.5, line: { transparency: 100 }, fill: { color: COLORS.purple } });
   cover.addShape("arc", { x: 8.5, y: 0.55, w: 4.1, h: 4.1, rotate: 22, line: { color: COLORS.pink, width: 5, transparency: 5 }, fill: { color: COLORS.purple, transparency: 100 } });
-  cover.addText("THE SMARKETERS / AI CMO", { x: 0.78, y: 0.72, w: 4.8, h: 0.3, fontFace: "Arial", fontSize: 11, bold: true, color: COLORS.blush, charSpacing: 2, margin: 0 });
+  cover.addText("KREV AI / AI CMO", { x: 0.78, y: 0.72, w: 4.8, h: 0.3, fontFace: "Arial", fontSize: 11, bold: true, color: COLORS.blush, charSpacing: 2, margin: 0 });
   cover.addText(shorten(model.title, 70), { x: 0.75, y: 2.0, w: 8.2, h: 1.55, fontFace: "Arial", fontSize: 50, bold: true, color: COLORS.white, margin: 0, breakLine: false, fit: "shrink", valign: "middle" });
   cover.addText(`${model.company.name}\n${manifest.theme.replace(/-/g, " ").toUpperCase()} · ${model.reportPeriod.label}`, { x: 0.78, y: 4.05, w: 7.8, h: 0.88, fontFace: "Arial", fontSize: 18, color: COLORS.blush, breakLine: false, margin: 0 });
   cover.addText("PDF = KNOW   ·   PPTX = DECIDE   ·   XLSX = OPERATE", { x: 0.8, y: 6.72, w: 8.0, h: 0.25, fontFace: "Arial", fontSize: 10, bold: true, color: COLORS.blush, charSpacing: 1.2, margin: 0 });

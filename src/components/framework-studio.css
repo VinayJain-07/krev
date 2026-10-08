@@ -42,7 +42,7 @@
 .visual-studio-canvas [class*="text-[9px]"] { font-size: 11px; }
 .visual-studio-message { max-width: 1240px; margin: 12px auto; color: #695b6f; font-size: 12px; }
 
-/* Keep the imported renderers inside the Smarketers light visual system. */
+/* Keep the imported renderers inside the KREV AI light visual system. */
 .visual-studio-canvas { color: #342737; background: linear-gradient(145deg, #fffdfd 0%, #fdf5fb 56%, #f3eafa 100%); border-color: #eadbea; }
 .visual-studio-canvas [class~="bg-slate-950"], .visual-studio-canvas [class*="bg-slate-950/"],
 .visual-studio-canvas [class~="bg-slate-900"], .visual-studio-canvas [class*="bg-slate-900/"],

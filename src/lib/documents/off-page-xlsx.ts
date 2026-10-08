@@ -152,7 +152,7 @@ function baseSheet(sheet: Worksheet, freezeRow = 6, freezeColumn = 0) {
   sheet.properties.defaultRowHeight = 20;
   sheet.views = [{ state: "frozen", ySplit: freezeRow, xSplit: freezeColumn, showGridLines: false }];
   sheet.pageSetup = { orientation: "landscape", fitToPage: true, fitToWidth: 1, fitToHeight: 0, margins: { left: 0.25, right: 0.25, top: 0.4, bottom: 0.4, header: 0.2, footer: 0.2 } };
-  sheet.headerFooter.oddHeader = `&L&8SMARK CONNECT / OFF-PAGE SEO&R&8${sheet.name}`;
+  sheet.headerFooter.oddHeader = `&L&8KREV AI / OFF-PAGE SEO&R&8${sheet.name}`;
   sheet.headerFooter.oddFooter = "&L&8Validated workflow workbook&R&8Page &P of &N";
 }
 
@@ -444,8 +444,8 @@ function addValidationRegistry(workbook: ExcelJS.Workbook, args: OffPageWorkbook
 export async function createOffPageSeoXlsx(args: OffPageWorkbookArgs): Promise<Buffer> {
   const results = await validateMasterWorkflowResources();
   const workbook = new ExcelJS.Workbook();
-  workbook.creator = "Smark Connect";
-  workbook.company = "The Smarketers";
+  workbook.creator = "KREV AI";
+  workbook.company = "KREV AI";
   workbook.title = `${args.companyName} - Off-Page SEO Strategy & Execution Workbook`;
   workbook.subject = "Evidence-led off-page SEO strategy and operating workbook";
   workbook.description = "Excel-only off-page SEO workbook using master-derived resources that passed endpoint validation.";
@@ -463,7 +463,7 @@ export async function createOffPageSeoXlsx(args: OffPageWorkbookArgs): Promise<B
   addValidationRegistry(workbook, args, results);
 
   workbook.eachSheet((sheet) => {
-    sheet.getCell("A1").note = "Generated from the Smark Connect evidence model and the approved master-workflow candidate registry. Validate strategic fit before execution.";
+    sheet.getCell("A1").note = "Generated from the KREV AI evidence model and the approved master-workflow candidate registry. Validate strategic fit before execution.";
   });
   const output = await workbook.xlsx.writeBuffer();
   return Buffer.from(output);

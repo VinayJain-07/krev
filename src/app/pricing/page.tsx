@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Pricing — Smark Connect",
+  title: "Pricing — KREV AI",
   description: "Simple, transparent pricing. One plan with everything included. No feature gating, no per-seat charges.",
 };
 
@@ -387,7 +387,7 @@ export default function PricingPage() {
                 What AI providers are supported?
               </h3>
               <p className="mt-3 text-xs leading-relaxed text-slate-400">
-                Smark Connect supports OpenAI, Anthropic (Claude), Google Gemini, and OpenRouter. You bring your own API key, which is encrypted with AES-256 at rest and never exposed to client browsers.
+                KREV AI supports OpenAI, Anthropic (Claude), Google Gemini, and OpenRouter. You bring your own API key, which is encrypted with AES-256 at rest and never exposed to client browsers.
               </p>
             </div>
           </div>

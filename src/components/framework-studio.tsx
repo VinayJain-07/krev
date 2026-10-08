@@ -104,7 +104,7 @@ export function FrameworkStudio({ companyId, companyName, reportFrameworks, focu
 
   return <main className="visual-studio">
     <header className="visual-studio-header">
-      <div className="visual-studio-brand"><span><LayoutGrid size={20} /></span><div><small>SMARK CONNECT / {companyName}</small><h1>Visual Framework Studio</h1></div></div>
+      <div className="visual-studio-brand"><span><LayoutGrid size={20} /></span><div><small>KREV AI / {companyName}</small><h1>Visual Framework Studio</h1></div></div>
       <div className="visual-studio-header-actions"><Link href={`/dashboard/${companyId}`}>Back to dashboard</Link><button type="button" onClick={() => { setJsonText(JSON.stringify(current.config, null, 2)); setJsonOpen(true); setMessage(""); }}><FileJson2 size={16} /> Edit data</button><button className="visual-studio-primary" type="button" onClick={() => void exportPng()} disabled={exporting}><Download size={16} /> {exporting ? "Exporting…" : "Export PNG"}</button></div>
     </header>
     <div className="visual-studio-layout">

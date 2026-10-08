@@ -50,7 +50,7 @@ export async function POST(request: Request) {
   try {
     const operation = getInternalOperation("ai-cmo-chat");
     const embeddedSkills = await loadSkillPack(operation.skills, 48_000);
-    const systemPrompt = `You are the AI CMO Director inside Smark Connect.
+    const systemPrompt = `You are the AI CMO Director inside KREV AI.
 
 STRICT TWO-PHASE RESPONSE FRAMEWORK:
 For any question asked by the user, you MUST deliver your answer following this structured 2-phase sequence:

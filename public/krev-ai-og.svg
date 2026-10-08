@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1200" y2="630" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFF8F3"/>
+      <stop offset="1" stop-color="#FCE9F0"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="96" y1="90" x2="1060" y2="536" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8B2CE0"/>
+      <stop offset="0.55" stop-color="#B84BE7"/>
+      <stop offset="1" stop-color="#E8447A"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#6E3B8F" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="#FFFFFF" filter="url(#shadow)"/>
+  <rect x="64" y="64" width="1072" height="502" rx="28" fill="none" stroke="#E8E5EA"/>
+  <rect x="105" y="101" width="66" height="66" rx="20" fill="#171225"/>
+  <rect x="105" y="101" width="66" height="66" rx="20" fill="url(#accent)" opacity="0.18"/>
+  <path d="M125 116v36M125 134l26-18M125 134l26 18" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="159" cy="116" r="3.5" fill="#FCE9F0"/>
+  <text x="190" y="146" fill="#201A2B" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" letter-spacing="3">KREV <tspan fill="#7C34BC">AI</tspan></text>
+  <text x="600" y="275" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" text-anchor="middle">Your AI CMO,</text>
+  <text x="600" y="345" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="64" font-weight="800" text-anchor="middle">connected to the work.</text>
+  <rect x="104" y="410" width="176" height="104" rx="16" fill="#FCFAFF" stroke="#E5D5F5"/>
+  <path d="M132 482h104M132 465h70M132 448h42" stroke="#8B2CE0" stroke-width="7" stroke-linecap="round"/>
+  <rect x="936" y="410" width="156" height="104" rx="16" fill="#FCFAFF" stroke="#E5D5F5"/>
+  <circle cx="970" cy="449" r="11" fill="#8B2CE0"/>
+  <circle cx="1015" cy="476" r="11" fill="#E8447A"/>
+  <circle cx="1060" cy="438" r="11" fill="#B84BE7"/>
+  <path d="M980 454l25 16 45-28" fill="none" stroke="#A87ADF" stroke-width="4"/>
+  <circle cx="600" cy="454" r="29" fill="url(#accent)"/>
+  <path d="M600 435v38M581 454h38" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+</svg>

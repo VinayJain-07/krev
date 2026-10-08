@@ -53,7 +53,7 @@ export function AuthForm({ mode, googleEnabled }: { mode: "login" | "signup"; go
       {error && <p className="form-error" role="alert">{error}</p>}
       <button className="primary-button" type="submit" disabled={pending}>{pending ? "Please wait…" : mode === "login" ? "Sign in" : "Get started"}<ArrowRight size={16} aria-hidden="true" /></button>
       {googleEnabled && <><div className="auth-social-divider"><span>Or sign in with</span></div><button className="secondary-button" type="button" onClick={() => signIn("google", { redirectTo: redirectTarget() })}>Continue with Google</button></>}
-      <p className="auth-switch">{mode === "login" ? "New to Smark Connect?" : "Already have an account?"} <Link href={mode === "login" ? "/signup" : "/login"}>{mode === "login" ? "Create an account" : "Sign in"}</Link></p>
+      <p className="auth-switch">{mode === "login" ? "New to KREV AI?" : "Already have an account?"} <Link href={mode === "login" ? "/signup" : "/login"}>{mode === "login" ? "Create an account" : "Sign in"}</Link></p>
     </form>
   );
 }

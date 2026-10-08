@@ -33,11 +33,11 @@ export function ThemeSettings() {
   }
 
   return <div className="appearance-card">
-    <div className="appearance-intro"><div><strong>Interface theme</strong><p>Choose how Smark Connect appears on this browser. Your selection is applied across the dashboard, documents, reports, onboarding, and settings.</p></div><span>{theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}{theme === "dark" ? "Dark" : "Light"} active</span></div>
+    <div className="appearance-intro"><div><strong>Interface theme</strong><p>Choose how KREV AI appears on this browser. Your selection is applied across the dashboard, documents, reports, onboarding, and settings.</p></div><span>{theme === "dark" ? <Moon size={18} /> : <Sun size={18} />}{theme === "dark" ? "Dark" : "Light"} active</span></div>
     <div className="theme-options" role="radiogroup" aria-label="Interface theme">
       <button type="button" role="radio" aria-checked={theme === "light"} className={theme === "light" ? "active" : ""} onClick={() => chooseTheme("light")}>
         <span className="theme-preview theme-preview-light"><i /><i /><i /><i /></span>
-        <span><Sun size={16} /><span><strong>Light</strong><small>Warm paper surfaces with Smark purple accents.</small></span></span>
+        <span><Sun size={16} /><span><strong>Light</strong><small>Warm paper surfaces with KREV AI purple accents.</small></span></span>
         {theme === "light" && <Check className="theme-check" size={16} />}
       </button>
       <button type="button" role="radio" aria-checked={theme === "dark"} className={theme === "dark" ? "active" : ""} onClick={() => chooseTheme("dark")}>

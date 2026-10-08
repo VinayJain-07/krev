@@ -551,13 +551,13 @@ def extract_and_render_sources_register(raw_markdown: str, source_count: int) ->
     '''
 
 
-def get_smarketers_logo_base64() -> str:
-    logo_path = Path(sys.path[0] or ".").resolve() / "public" / "smarketers_logo.png"
+def get_krev_ai_logo_data_uri() -> str:
+    logo_path = Path(sys.path[0] or ".").resolve() / "public" / "krev-ai-logo.svg"
     if not logo_path.exists():
-        logo_path = Path.cwd() / "public" / "smarketers_logo.png"
+        logo_path = Path.cwd() / "public" / "krev-ai-logo.svg"
     if logo_path.exists():
         try:
-            return f"data:image/png;base64,{base64.b64encode(logo_path.read_bytes()).decode('ascii')}"
+            return f"data:image/svg+xml;base64,{base64.b64encode(logo_path.read_bytes()).decode('ascii')}"
         except Exception:
             pass
     return ""
@@ -591,7 +591,7 @@ REPORT_TEMPLATE = Template(r'''<!doctype html>
     size: A4 portrait;
     margin: 12mm 16mm 14mm;
     @top-left {
-        content: "THE SMARKETERS · SMARK CONNECT";
+        content: "KREV AI · AI CMO";
         font: 800 7pt Arial, sans-serif;
         color: #8B2CE0;
         letter-spacing: 0.1em;
@@ -647,11 +647,11 @@ body {
     position: relative;
 }
 
-.smark-brand-lockup-clean {
+.krev-brand-lockup-clean {
     margin-bottom: 12px;
 }
 
-.smark-brand-lockup-clean img {
+.krev-brand-lockup-clean img {
     height: 36px;
     width: auto;
     object-fit: contain;
@@ -1491,12 +1491,12 @@ body {
 <section class="cover-page">
     <div class="cover-top-content">
         {% if brand_logo %}
-        <div class="smark-brand-lockup-clean">
-            <img src="{{ brand_logo }}" alt="The Smarketers" />
+        <div class="krev-brand-lockup-clean">
+            <img src="{{ brand_logo }}" alt="KREV AI" />
         </div>
         {% else %}
-        <div class="smark-brand-lockup-clean">
-            <strong style="color:#1A1A1A; font-size:13pt; letter-spacing:0.08em;">THE SMARKETERS</strong>
+        <div class="krev-brand-lockup-clean">
+            <strong style="color:#1A1A1A; font-size:13pt; letter-spacing:0.08em;">KREV AI</strong>
         </div>
         {% endif %}
 
@@ -1580,7 +1580,7 @@ def build_report_html(payload: dict[str, Any]) -> str:
     except Exception:
         updated = datetime.now().strftime("%B %d, %Y")
 
-    brand_logo = get_smarketers_logo_base64()
+    brand_logo = get_krev_ai_logo_data_uri()
 
     return REPORT_TEMPLATE.render(
         title=title,

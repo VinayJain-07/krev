@@ -33,7 +33,7 @@ export default function BlogIndexPage() {
           <div aria-hidden="true" className="pointer-events-none absolute left-1/2 top-[-180px] h-[540px] w-[900px] -translate-x-1/2 rounded-full bg-violet-700/15 blur-[120px]" />
           <div className="relative mx-auto max-w-6xl">
             <div className="inline-flex items-center gap-2 rounded-full border border-violet-400/25 bg-violet-500/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.16em] text-violet-200">
-              <BookOpen className="size-3.5" /> Smark Connect Blog
+              <BookOpen className="size-3.5" /> KREV AI Blog
             </div>
             <div className="mt-7 grid gap-7 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-end">
               <div>

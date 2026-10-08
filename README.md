@@ -1,6 +1,6 @@
-# Smark Connect
+# KREV AI
 
-Smark Connect is a multi-company, BYOK AI CMO application. A user connects a supported AI-provider key, adds a public company URL, and receives six evidence-led analyses plus a specialist agent workspace.
+KREV AI is a multi-company, BYOK AI CMO application. A user connects a supported AI-provider key, adds a public company URL, and receives six evidence-led analyses plus a specialist agent workspace.
 
 ## What runs for each company
 
@@ -56,7 +56,7 @@ The authenticated endpoint validates a public HTTP(S) URL, blocks local/private/
 
 The worker is an in-process, concurrency-one queue intended for one Render web-service instance. Multiple instances require a distributed queue and worker lock. Jobs and cached results are stored in PostgreSQL; no audit result depends on Render's ephemeral filesystem.
 
-Exports follow the approved Smarketers cream, blush, violet, and Arial visual system.
+Exports follow the approved KREV AI cream, blush, violet, and Arial visual system.
 
 ## Token planning
 

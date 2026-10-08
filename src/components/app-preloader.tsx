@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { ParticleWave } from "@/components/ui/particle-wave";
+import { KrevLogo } from "./krev-logo";
 
 export function AppPreloader() {
   const [visible, setVisible] = useState(true);
@@ -44,7 +45,7 @@ export function AppPreloader() {
   return (
     <div
       role="status"
-      aria-label="Loading Smark Connect"
+      aria-label="Loading KREV AI"
       className={`fixed inset-0 z-[99999] flex flex-col justify-between bg-[#05030a] text-white overflow-hidden transition-opacity duration-700 ease-out select-none ${
         visible ? "opacity-100" : "opacity-0 pointer-events-none"
       }`}
@@ -61,11 +62,9 @@ export function AppPreloader() {
         <p className="text-[11px] opacity-60 mt-0.5">Move your mouse to interact</p>
       </div>
 
-      {/* Center of the Screen: Smark Connect & Brand Tagline */}
+      {/* Center of the Screen: KREV AI & Brand Tagline */}
       <main className="absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center pointer-events-none">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white font-sans drop-shadow-[0_4px_35px_rgba(168,85,247,0.65)]">
-          Smark Connect
-        </h1>
+        <KrevLogo inverse className="h-auto w-[220px] sm:w-[300px] drop-shadow-[0_4px_35px_rgba(168,85,247,0.65)]" />
         <p className="mt-3 text-xs sm:text-sm font-semibold tracking-[0.28em] uppercase text-purple-300/90 drop-shadow-[0_2px_12px_rgba(168,85,247,0.35)]">
           Your AI CMO
         </p>

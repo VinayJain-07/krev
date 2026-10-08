@@ -8,6 +8,7 @@ import { ScrollytellingEightLayers } from "@/components/scrollytelling-eight-lay
 import { ConnectedIntelligenceFlowchart } from "@/components/connected-intelligence-flowchart";
 import { SpecialistAgentsFlipper } from "@/components/specialist-agents-flipper";
 import { ComparisonMatrix } from "@/components/comparison-matrix";
+import { ProofGallery } from "@/components/proof-gallery";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -63,7 +64,7 @@ export default async function Home() {
             <span className="text-purple-300 font-serif italic font-normal">fail enterprise growth teams</span>
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base font-normal leading-relaxed text-slate-300/90 tracking-[0.012em]">
-            When marketing teams rely on standalone AI prompts, each team member inputs different context. The result is brand voice drift, contradictory messaging, and fragmented agency reporting. Smark Connect enforces a unified evidence foundation.
+            When marketing teams rely on standalone AI prompts, each team member inputs different context. The result is brand voice drift, contradictory messaging, and fragmented agency reporting. KREV AI enforces a unified evidence foundation.
           </p>
 
           <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-3 text-left">
@@ -74,7 +75,7 @@ export default async function Home() {
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white">Unified Company Ground Truth</h3>
               <p className="mt-2 text-sm font-normal leading-relaxed text-slate-400 tracking-[0.012em]">
-                Single-prompt AI assistants lose brand voice within 3 turns. Smark Connect builds a 20-page web topology baseline so all 12 specialist agents execute from the exact same company truth.
+                Single-prompt AI assistants lose brand voice within 3 turns. KREV AI builds a 20-page web topology baseline so all 12 specialist agents execute from the exact same company truth.
               </p>
             </div>
 
@@ -85,7 +86,7 @@ export default async function Home() {
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white">Vector Synthesis Engine</h3>
               <p className="mt-2 text-sm font-normal leading-relaxed text-slate-400 tracking-[0.012em]">
-                Generative Engine Optimization (GEO) requires optimizing for LLM vector resolution rather than blue keyword links. Smark Connect extracts machine-readable entity nodes that rank inside ChatGPT and Perplexity.
+                Generative Engine Optimization (GEO) requires optimizing for LLM vector resolution rather than blue keyword links. KREV AI extracts machine-readable entity nodes that rank inside ChatGPT and Perplexity.
               </p>
             </div>
 
@@ -111,6 +112,9 @@ export default async function Home() {
 
       {/* 12 Specialist Execution Agents with 3D Flippable Cards */}
       <SpecialistAgentsFlipper />
+
+      {/* Product screenshots and report previews */}
+      <ProofGallery />
 
       {/* Knowledge & Case Studies Bento Grid */}
       <section id="insights" className="border-t border-white/10 bg-[#0c0c14] py-24 px-6">

@@ -113,7 +113,7 @@ export function PresentationPreview({ title, markdown, theme, slideIndex, onSlid
   const style = { "--deck-accent": colors.accent, "--deck-deep": colors.deep, "--deck-soft": colors.soft } as CSSProperties;
   return <section className="deck-preview" style={style}>
     <header className="deck-preview-toolbar"><div><Presentation size={15} /><span><strong>Executive deck preview</strong><small>One message per slide · derived from the report evidence</small></span></div><a href={downloadHref}><Download size={13} /> Download editable PPTX</a></header>
-    <div className="deck-canvas"><article className={`deck-slide deck-slide-${slides[safeIndex].kind}`}><SlideContent slide={slides[safeIndex]} /><footer><span>THE SMARKETERS / SMARK CONNECT</span><span>{safeIndex + 1}</span></footer></article></div>
+    <div className="deck-canvas"><article className={`deck-slide deck-slide-${slides[safeIndex].kind}`}><SlideContent slide={slides[safeIndex]} /><footer><span>KREV AI / KREV AI</span><span>{safeIndex + 1}</span></footer></article></div>
     <nav className="deck-navigation" aria-label="Presentation slides"><button type="button" disabled={safeIndex === 0} onClick={() => onSlideChange(safeIndex - 1)}><ChevronLeft size={14} /> Previous</button><div>{slides.map((slide, index) => <button type="button" className={index === safeIndex ? "active" : ""} aria-label={`Open slide ${index + 1}: ${slide.kicker}`} onClick={() => onSlideChange(index)} key={`${slide.kind}-${index}`} />)}</div><span>Slide {safeIndex + 1} of {slides.length}</span><button type="button" disabled={safeIndex === slides.length - 1} onClick={() => onSlideChange(safeIndex + 1)}>Next <ChevronRight size={14} /></button></nav>
   </section>;
 }

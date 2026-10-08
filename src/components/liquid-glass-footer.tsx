@@ -131,7 +131,7 @@ export function LiquidGlassFooter() {
       {/* Bottom Bar */}
       <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-xs text-slate-400">
         <p className="text-[11px] uppercase tracking-wider opacity-70">
-          &copy; {new Date().getFullYear()} Smark Connect Inc. All rights reserved.
+          &copy; {new Date().getFullYear()} KREV AI Inc. All rights reserved.
         </p>
 
         <div className="flex items-center gap-3 sm:gap-4">

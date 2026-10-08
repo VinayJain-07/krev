@@ -130,7 +130,7 @@ export function ComparisonMatrix() {
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 rounded-full border border-purple-500/30 bg-purple-500/10 px-4 py-1.5 text-xs font-medium tracking-[0.16em] text-purple-300 uppercase shadow-[0_0_15px_rgba(168,85,247,0.2)]">
             <Sparkles className="size-3.5 text-purple-400 animate-pulse" />
-            WHY SMARK CONNECT
+            WHY KREV AI
           </div>
 
           <h2 className="mt-4 text-3xl font-semibold tracking-[-0.01em] text-white sm:text-4xl lg:text-5xl">
@@ -139,7 +139,7 @@ export function ComparisonMatrix() {
           </h2>
 
           <p className="mt-4 text-base font-normal text-slate-300/85 leading-relaxed tracking-[0.012em]">
-            Legacy SEO platforms log search numbers. CRMs track closed deals. Smark Connect bridges the gap between raw web evidence and revenue growth.
+            Legacy SEO platforms log search numbers. CRMs track closed deals. KREV AI bridges the gap between raw web evidence and revenue growth.
           </p>
         </div>
 
@@ -165,7 +165,7 @@ export function ComparisonMatrix() {
                 </th>
                 <th className="p-4 sm:p-5 font-semibold text-white bg-purple-600/15 border-x border-purple-500/30 w-[16%] shadow-[0_0_20px_rgba(168,85,247,0.15)]">
                   <div className="flex items-center gap-2">
-                    <span className="text-purple-200 font-medium">Smark Connect</span>
+                    <span className="text-purple-200 font-medium">KREV AI</span>
                     <span className="rounded bg-purple-500/30 border border-purple-400/40 px-1.5 py-0.5 text-[10px] font-mono text-purple-300 uppercase tracking-wider">
                       AI CMO
                     </span>
@@ -204,7 +204,7 @@ export function ComparisonMatrix() {
                     <StatusBadge cell={row.growpad} />
                   </td>
 
-                  {/* Smark Connect (Highlighted Column) */}
+                  {/* KREV AI (Highlighted Column) */}
                   <td className="p-4 sm:p-5 bg-purple-600/10 border-x border-purple-500/20 font-semibold text-purple-200">
                     <span className="inline-flex items-center gap-1.5 rounded-lg bg-purple-500/20 border border-purple-400/30 px-2.5 py-1 text-xs text-purple-200 shadow-[0_0_10px_rgba(168,85,247,0.2)]">
                       {row.smark.text}

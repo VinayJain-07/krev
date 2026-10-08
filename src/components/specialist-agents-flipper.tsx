@@ -263,7 +263,7 @@ const AGENTS: SpecialistAgent[] = [
       text: "text-purple-400",
     },
     mission: "Transforms technical audit scores and strategic positioning into executive design briefs, infographic concepts, and ad creative boards.",
-    groundedIn: "Brand Visual Guidelines & Smarketers Design System",
+    groundedIn: "Brand Visual Guidelines & KREV AI Design System",
     deliverables: ["Figma Design Wireframe Briefs", "Statistical Infographic Blueprints", "High-Performing Ad Creative Concepts"],
     keyMetric: "Board-Ready Executive Aesthetic Fidelity",
   },

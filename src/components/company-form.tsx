@@ -156,7 +156,7 @@ export function CompanyForm({ additional = false }: { additional?: boolean }) {
         {additional ? "Add another company" : "Where should we start?"}
       </h2>
       <p className="mt-3 text-sm leading-relaxed text-slate-300">
-        Add the company website. Smark Connect will crawl its public pages and synthesize your custom documents & marketing priorities in parallel.
+        Add the company website. KREV AI will crawl its public pages and synthesize your custom documents & marketing priorities in parallel.
       </p>
 
       <form onSubmit={submit} className="mt-6 space-y-6">

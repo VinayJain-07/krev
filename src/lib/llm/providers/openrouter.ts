@@ -28,7 +28,7 @@ export const openRouterProvider: LLMProvider = {
     const messages = params.system ? [{ role: "system", content: params.system }, ...params.messages] : params.messages;
     const request = (responseFormat?: Record<string, unknown>, model = params.model) => providerFetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",
-      headers: { Authorization: `Bearer ${params.apiKey}`, "Content-Type": "application/json", "HTTP-Referer": process.env.AUTH_URL ?? "http://localhost:3000", "X-Title": "Smark Connect" },
+      headers: { Authorization: `Bearer ${params.apiKey}`, "Content-Type": "application/json", "HTTP-Referer": process.env.AUTH_URL ?? "http://localhost:3000", "X-Title": "KREV AI" },
       body: JSON.stringify({ model, messages, max_tokens: params.maxTokens, temperature: params.temperature, reasoning: { exclude: true }, response_format: responseFormat }),
     }) as Promise<OpenRouterResponse | null>;
 

@@ -91,7 +91,7 @@ export default function DocsPage() {
           <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
             Learn how to use
             <br />
-            <span className="font-serif italic font-normal text-purple-300">Smark Connect.</span>
+            <span className="font-serif italic font-normal text-purple-300">KREV AI.</span>
           </h1>
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-slate-400">
             From first setup to advanced multi-agent workflows — everything you need to get the most out of your AI CMO.
@@ -149,7 +149,7 @@ export default function DocsPage() {
               </div>
               <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Getting Started</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                Smark Connect is an AI-powered marketing intelligence platform that turns your company&apos;s website into a full marketing command center. Unlike disconnected tools or shallow ChatGPT prompts, Smark Connect crawls your public digital footprint to extract verified evidence before generating strategy.
+                KREV AI is an AI-powered marketing intelligence platform that turns your company&apos;s website into a full marketing command center. Unlike disconnected tools or shallow ChatGPT prompts, KREV AI crawls your public digital footprint to extract verified evidence before generating strategy.
               </p>
 
               <div className="mt-8 rounded-xl border border-white/10 bg-white/[0.02] p-5">
@@ -266,7 +266,7 @@ export default function DocsPage() {
 
               <h3 className="mt-8 text-sm font-semibold text-white">Adding Company Workspaces:</h3>
               <p className="mt-2 text-xs leading-relaxed text-slate-300">
-                You can host unlimited company workspaces. For every company, Smark Connect executes an automated 20-page crawl that extracts:
+                You can host unlimited company workspaces. For every company, KREV AI executes an automated 20-page crawl that extracts:
               </p>
               <ul className="mt-3 space-y-2 text-xs text-slate-400">
                 <li className="flex items-center gap-2">
@@ -560,7 +560,7 @@ export default function DocsPage() {
               </div>
               <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Analytics & Lighthouse Auditing</h2>
               <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                Smark Connect hosts its own local Chromium Lighthouse auditor. We don&apos;t rely on third-party rate-limited APIs to gauge your site&apos;s Core Web Vitals.
+                KREV AI hosts its own local Chromium Lighthouse auditor. We don&apos;t rely on third-party rate-limited APIs to gauge your site&apos;s Core Web Vitals.
               </p>
 
               <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 text-center">

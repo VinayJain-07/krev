@@ -323,7 +323,7 @@ export function MinimalCompanyLoading({
             <span className="size-2 rounded-full bg-purple-300" />
           </div>
           <span className="text-xs font-semibold tracking-wider text-slate-300 uppercase">
-            Smark Connect
+            KREV AI
           </span>
         </Link>
 

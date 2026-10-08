@@ -8,7 +8,7 @@ const STORY_SPEED = 21;
 const storyBlocks = [
   {
     lead: "Start with what already exists.",
-    text: "You built a business, put its thinking on the web, and earned the proof behind it. Yet every new marketing brief can feel like starting from zero. Smark Connect begins by listening to what your company has already made public, so the work starts from your reality instead of a blank prompt.",
+    text: "You built a business, put its thinking on the web, and earned the proof behind it. Yet every new marketing brief can feel like starting from zero. KREV AI begins by listening to what your company has already made public, so the work starts from your reality instead of a blank prompt.",
   },
   {
     lead: "Read before we recommend.",
@@ -20,7 +20,7 @@ const storyBlocks = [
   },
   {
     lead: "Bring many perspectives into one place.",
-    text: "Smark Connect gathers the research into a shared evidence base. Specialist workflows examine your company, competitors, audience, search visibility, AI visibility, and strategy. The AI CMO can then connect those perspectives instead of treating each report as an isolated prompt.",
+    text: "KREV AI gathers the research into a shared evidence base. Specialist workflows examine your company, competitors, audience, search visibility, AI visibility, and strategy. The AI CMO can then connect those perspectives instead of treating each report as an isolated prompt.",
   },
   {
     lead: "Turn evidence into a next move.",
@@ -113,7 +113,7 @@ export function AuditStoryPanel({ company, progress, isLive, scanActive, onReque
           ref={scrollRef}
           onScroll={handleScroll}
           tabIndex={0}
-          aria-label="Smark Connect story"
+          aria-label="KREV AI story"
           className="min-h-0 max-h-[min(560px,calc(100dvh-174px))] overflow-y-auto overscroll-contain px-6 [scrollbar-width:none] sm:px-10 [&::-webkit-scrollbar]:hidden"
         >
           <div className="mx-auto max-w-[61ch] pb-24 pt-8 sm:pt-12">

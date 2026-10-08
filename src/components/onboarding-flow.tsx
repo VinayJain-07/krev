@@ -377,7 +377,7 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
           </h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate-400">
             {currentStep === 1 && "Create one secure account to save your company intelligence and return to your workspace."}
-            {currentStep === 2 && "Smark Connect crawls public pages to extract verified digital evidence before running strategy."}
+            {currentStep === 2 && "KREV AI crawls public pages to extract verified digital evidence before running strategy."}
             {currentStep === 3 && "Attach your own pitch decks or strategy docs and rank your priority target geography and audience."}
             {currentStep === 4 && "Bring your own API key. Your credentials are encrypted at rest and used for your workspace."}
             {currentStep === 5 && "Your evidence baseline and strategic brief are ready. All analyses will run concurrently."}
@@ -989,7 +989,7 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
                     className="mt-2 h-11 w-full rounded-xl border border-white/15 !bg-transparent px-3 text-xs text-white placeholder-slate-400 outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
                   />
                   <p className="mt-1 text-[11px] text-slate-400">
-                    Smark Connect will compare your positioning, content gaps, and search rankings against these domains.
+                    KREV AI will compare your positioning, content gaps, and search rankings against these domains.
                   </p>
                 </div>
               </div>

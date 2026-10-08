@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import Link from "next/link";
 import { LogoutButton } from "./logout-button";
+import { KrevLogo } from "./krev-logo";
 import { Check, Shield } from "lucide-react";
 
 const steps = [
@@ -15,10 +16,7 @@ export function OnboardingLayout({ activeStep, children }: { activeStep: number;
       {/* Topbar */}
       <header className="fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b border-white/10 bg-[#0a0a0f]/85 px-6 backdrop-blur-xl md:px-12">
         <Link href="/" className="group flex items-center gap-3">
-          <div className="flex size-7 items-center justify-center rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 shadow-md shadow-purple-500/30 transition-transform group-hover:scale-105">
-            <span className="size-2 rounded-full bg-white" />
-          </div>
-          <span className="text-base font-bold tracking-tight text-white">Smark Connect</span>
+          <KrevLogo inverse compact className="transition-transform group-hover:scale-[1.03]" />
         </Link>
 
         <div className="flex items-center gap-2 text-xs text-slate-400">
@@ -47,7 +45,7 @@ export function OnboardingLayout({ activeStep, children }: { activeStep: number;
               Three steps to your first marketing brief.
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-slate-400">
-              Connect your company and Smark Connect will turn your live website into an actionable marketing workspace.
+              Connect your company and KREV AI will turn your live website into an actionable marketing workspace.
             </p>
 
             <ol className="mt-10 space-y-3">

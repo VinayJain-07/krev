@@ -3,7 +3,7 @@
 export default function FourOhFourError({ retry }: { error: Error & { digest?: string }; retry: () => void }) {
   return <main className="admin-login-shell">
     <section className="admin-login-card" role="alert">
-      <span className="admin-eyebrow">SMARK CONNECT · 404 VIEW</span>
+      <span className="admin-eyebrow">KREV AI · 404 VIEW</span>
       <h1>404 page is temporarily unavailable</h1>
       <p>The dashboard could not reach its data. Check that the database is running, then try again.</p>
       <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>

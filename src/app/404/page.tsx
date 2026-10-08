@@ -131,7 +131,7 @@ export default async function FourOhFourPage() {
 
   return <main className="admin-shell">
     <header className="admin-header">
-      <div><span className="admin-eyebrow">SMARK CONNECT / 404 VIEW</span><h1>404 page</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
+      <div><span className="admin-eyebrow">KREV AI / 404 VIEW</span><h1>404 page</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
       <div className="admin-header-actions"><Link href="/" className="admin-nav-back">Back to app</Link><FourOhFourRefresh /><form action={fourOhFourSignOut}><button type="submit">Sign out</button></form></div>
     </header>
 

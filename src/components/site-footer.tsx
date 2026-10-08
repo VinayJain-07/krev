@@ -4,6 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
+import { KrevLogo } from "./krev-logo";
 
 export function SiteFooter() {
   return (
@@ -26,10 +27,7 @@ export function SiteFooter() {
           {/* Brand & Overview Column */}
           <div className="md:col-span-4 flex flex-col gap-4">
             <Link href="/" className="group flex items-center gap-3 text-white">
-              <div className="flex size-8 items-center justify-center rounded-full bg-gradient-to-tr from-purple-600 to-indigo-500 shadow-md shadow-purple-500/40 transition-transform group-hover:scale-105">
-                <span className="size-2 rounded-full bg-white" />
-              </div>
-              <span className="text-xl font-semibold tracking-wide">SMARK CONNECT</span>
+              <KrevLogo inverse className="transition-transform group-hover:scale-[1.03]" />
             </Link>
             <p className="text-xs sm:text-sm font-normal leading-relaxed text-slate-300/85 max-w-sm tracking-[0.012em]">
               Autonomous AI marketing intelligence. Transforming your digital footprint into 6 verified evidence reports, AI CMO strategic direction, and 12 execution agents.
@@ -157,7 +155,7 @@ export function SiteFooter() {
         {/* Bottom Bar */}
         <div className="pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 md:gap-4 text-xs text-slate-400">
           <p className="text-[11px] uppercase tracking-wider opacity-70">
-            &copy; {new Date().getFullYear()} Smark Connect Inc. All rights reserved.
+            &copy; {new Date().getFullYear()} KREV AI Inc. All rights reserved.
           </p>
 
           <div className="flex items-center gap-3 sm:gap-4">

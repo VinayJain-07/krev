@@ -501,7 +501,7 @@ export function ScrollytellingEightLayers() {
                     <div className="absolute -top-2.5 right-4 rounded-full bg-purple-600 px-2.5 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
                       ELEVATED STRATEGY
                     </div>
-                    <h4 className="text-xs font-bold text-white">Smark Connect 8-Layer Vector Graph</h4>
+                    <h4 className="text-xs font-bold text-white">KREV AI 8-Layer Vector Graph</h4>
                     <p className="text-[11px] text-purple-200 mt-1">
                       89% Generative Engine Vector Resolution across ChatGPT Search, Perplexity, and Claude.
                     </p>

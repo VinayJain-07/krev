@@ -23,10 +23,10 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = getBlogBySlug(slug);
-  if (!post) return { title: "Article Not Found | Smark Connect" };
+  if (!post) return { title: "Article Not Found | KREV AI" };
 
   return {
-    title: `${post.title} | Smark Connect Blog`,
+    title: `${post.title} | KREV AI Blog`,
     description: post.summary,
     openGraph: { title: post.title, description: post.summary, type: "article" },
   };
@@ -120,7 +120,7 @@ export default async function BlogPostPage({
             <h1 className="text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-5xl lg:text-[3.6rem]">{post.title}</h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-slate-300">{post.summary}</p>
             <div className="mt-7 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-400">
-              <span className="font-semibold text-slate-200">Smark Connect Editorial Team</span>
+              <span className="font-semibold text-slate-200">KREV AI Editorial Team</span>
               <span aria-hidden="true">·</span><time>{post.date}</time>
               <span aria-hidden="true">·</span><span>{post.readTime}</span>
             </div>
