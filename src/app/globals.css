@@ -643,6 +643,27 @@ input:-webkit-autofill:active {
 .settings-heading h2 { margin: 0; font-size: 30px; letter-spacing: -.04em; }
 .settings-heading > p:last-child { color: var(--slate); font-size: 12px; }
 .settings-content .form-card { width: 100%; box-shadow: 0 18px 50px rgba(126,85,103,.08); }
+.ai-connection-form { width: 100%; }
+html:not([data-theme="dark"]) .ai-connection-form { color: var(--ink); border-color: var(--line); background: rgba(255,253,251,.96); box-shadow: 0 18px 50px rgba(126,85,103,.08); }
+html:not([data-theme="dark"]) .ai-connection-form h2 { color: var(--ink); }
+html:not([data-theme="dark"]) .ai-connection-form p { color: var(--slate); }
+html:not([data-theme="dark"]) .ai-connection-form label { color: #6a6065; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option { color: var(--ink); border-color: var(--line); background: #fffdfa; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option:hover { border-color: #c8a5dc; background: #fcf8ff; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option[aria-checked="true"] { border-color: var(--purple); background: #faf1ff; box-shadow: 0 0 0 3px rgba(139,44,224,.08); }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option > div:first-child { border-color: #e5dbe8; background: #f7f2fb; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option strong { color: var(--ink); }
+html:not([data-theme="dark"]) .ai-connection-form .ai-provider-option small { color: #7c34bc; }
+html:not([data-theme="dark"]) .ai-connection-form input,
+html:not([data-theme="dark"]) .ai-connection-form select { color: var(--ink); border-color: var(--line); background: #fff; }
+html:not([data-theme="dark"]) .ai-connection-form input::placeholder { color: #9a8f95; }
+html:not([data-theme="dark"]) .ai-connection-form option { color: var(--ink); background: #fff; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-model-select-control,
+html:not([data-theme="dark"]) .ai-connection-form .ai-model-custom-input { color: var(--ink); border-color: var(--line); background: #fff; }
+html:not([data-theme="dark"]) .ai-connection-form .ai-model-select-control:focus,
+html:not([data-theme="dark"]) .ai-connection-form .ai-model-custom-input:focus,
+html:not([data-theme="dark"]) .ai-connection-form input:focus { border-color: var(--purple); }
+html:not([data-theme="dark"]) .ai-connection-form .text-slate-500 { color: #81757c; }
 .appearance-card { overflow: hidden; border: 1px solid #e4d9d4; border-radius: 24px; background: rgba(255,255,255,.92); box-shadow: 0 18px 50px rgba(126,85,103,.08); }
 .appearance-intro { padding: 24px 26px; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; border-bottom: 1px solid #eee5e1; }.appearance-intro strong { font-size: 14px; }.appearance-intro p { max-width: 580px; margin: 7px 0 0; color: var(--slate); font-size: 11px; line-height: 1.55; }.appearance-intro > span { padding: 8px 10px; border-radius: 99px; display: flex; align-items: center; gap: 6px; color: var(--purple); background: #f4ebfb; font-size: 9px; font-weight: 800; white-space: nowrap; }
 .theme-options { padding: 22px 26px; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }.theme-options > button { position: relative; padding: 12px; border: 1px solid #ded5d1; border-radius: 16px; text-align: left; color: var(--ink); background: #fff; cursor: pointer; transition: transform .2s,border-color .2s,box-shadow .2s; }.theme-options > button:hover { transform: translateY(-2px); }.theme-options > button.active { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(139,44,224,.09),0 14px 30px rgba(72,38,91,.08); }.theme-options > button > span:last-of-type { margin-top: 12px; display: flex; align-items: flex-start; gap: 8px; }.theme-options strong, .theme-options small { display: block; }.theme-options strong { font-size: 11px; }.theme-options small { margin-top: 4px; color: var(--muted); font-size: 8px; line-height: 1.45; }.theme-check { position: absolute; right: 12px; bottom: 15px; padding: 3px; border-radius: 50%; color: white; background: var(--purple); }

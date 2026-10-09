@@ -1,6 +1,7 @@
 import type { CompletionParams, LLMProvider } from "../types";
 import { extractJson, providerFetch } from "../shared";
 import { ProviderError } from "../types";
+import { DEFAULT_MODEL_BY_PROVIDER } from "../model-catalog";
 
 type OpenRouterResponse = {
   choices?: Array<{ message?: { content?: string | null } }> | null;
@@ -12,7 +13,7 @@ function responseText(data: OpenRouterResponse | null | undefined): string {
 }
 
 export const openRouterProvider: LLMProvider = {
-  async validateKey(apiKey, model = process.env.SMARK_MODEL_OPENROUTER || "openai/gpt-5.4-mini") {
+  async validateKey(apiKey, model = process.env.SMARK_MODEL_OPENROUTER || DEFAULT_MODEL_BY_PROVIDER.openrouter) {
     const output = await this.complete({
       apiKey,
       model,

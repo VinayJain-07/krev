@@ -8,6 +8,8 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { AIModelSelect } from "@/components/ai-model-select";
+import { getRecommendedModel } from "@/lib/llm/model-catalog";
 import {
   Globe,
   ArrowRight,
@@ -43,41 +45,36 @@ interface ProviderOption {
   models: string;
   logo: string;
   hint: string;
-  recommendedModel: string;
 }
 
 const PROVIDERS: ProviderOption[] = [
   {
     id: "openai",
     name: "OpenAI",
-    models: "GPT-4o, o1, and more",
+    models: "GPT-5.1, GPT-5 mini, and more",
     logo: "/provider-logos/openai.svg",
     hint: "Fast parallel JSON completion",
-    recommendedModel: "gpt-4o-mini",
   },
   {
     id: "anthropic",
     name: "Anthropic",
-    models: "Claude Sonnet and Opus",
+    models: "Claude Opus 5, Sonnet 5, and more",
     logo: "/provider-logos/anthropic.svg",
     hint: "Exceptional strategic reasoning",
-    recommendedModel: "claude-opus-5",
   },
   {
     id: "google",
     name: "Google Gemini",
-    models: "Gemini 1.5 Pro, 2.0 Flash",
+    models: "Gemini 3.8, 3.7, and 3.6 Flash",
     logo: "/provider-logos/google-gemini.svg",
     hint: "Massive context & multimodal",
-    recommendedModel: "gemini-1.5-flash",
   },
   {
     id: "openrouter",
     name: "OpenRouter",
-    models: "Access 100+ models",
+    models: "Access 100+ routed models",
     logo: "/provider-logos/openrouter.svg",
     hint: "Unified key with smart routing",
-    recommendedModel: "openai/gpt-4o-mini",
   },
 ];
 
@@ -145,8 +142,7 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
   const [apiKey, setApiKey] = React.useState("");
   const [model, setModel] = React.useState(
     verifiedProvider?.model ||
-    PROVIDERS.find((provider) => provider.id === verifiedProvider?.provider)?.recommendedModel ||
-    PROVIDERS[1].recommendedModel
+    getRecommendedModel(verifiedProvider?.provider ?? PROVIDERS[1].id)
   );
   const [connectedProvider, setConnectedProvider] = React.useState(verifiedProvider?.provider ?? "");
   const [connectedModel, setConnectedModel] = React.useState(verifiedProvider?.model ?? "");
@@ -1135,13 +1131,13 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
                         type="button"
                         onClick={() => {
                           setSelectedProvider(prov.id);
-                          setModel(prov.recommendedModel);
+                          setModel(getRecommendedModel(prov.id));
                           setApiKey("");
                           setError("");
                         }}
                         role="radio"
                         aria-checked={isSelected}
-                        className={`relative flex cursor-pointer items-center gap-4 rounded-2xl border p-5 transition-all ${
+                        className={`relative flex min-h-[136px] cursor-pointer items-center gap-4 rounded-2xl border p-5 text-left transition-all ${
                           isSelected
                             ? "border-purple-500 bg-purple-950/20 shadow-lg shadow-purple-500/10 ring-1 ring-purple-500/50"
                             : "border-white/10 bg-white/[0.03] hover:border-white/20 hover:bg-white/[0.05]"
@@ -1159,7 +1155,7 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center justify-between">
+                          <div className="flex min-w-0 items-center justify-between gap-3">
                             <h3 className="text-sm font-bold text-white">{prov.name}</h3>
                             {isSelected && (
                               <span className="flex size-4 items-center justify-center rounded-full bg-purple-500 text-white">
@@ -1167,8 +1163,8 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
                               </span>
                             )}
                           </div>
-                          <p className="mt-0.5 text-xs text-purple-300 font-medium">{prov.models}</p>
-                          <p className="mt-1 text-[11px] text-slate-400 truncate">{prov.hint}</p>
+                          <p className="mt-0.5 text-xs leading-5 text-purple-300 font-medium">{prov.models}</p>
+                          <p className="mt-1 text-[11px] leading-4 text-slate-400">{prov.hint}</p>
                         </div>
                       </button>
                     );
@@ -1178,13 +1174,10 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
 
               {/* API Key Input */}
               <div className="rounded-xl border border-white/10 bg-white/[0.02] p-5 space-y-4">
-                <div className="flex items-center justify-between">
+                <div>
                   <label htmlFor="api-key" className="text-xs font-bold uppercase tracking-wider text-slate-300">
                     {currentProviderObj.name} API Key
                   </label>
-                  <span className="text-[11px] text-purple-400 font-medium">
-                    Recommended: {currentProviderObj.recommendedModel}
-                  </span>
                 </div>
 
                 <div className="relative">
@@ -1210,19 +1203,17 @@ function OnboardingContent({ authenticated, verifiedProvider }: { authenticated:
                 </div>
 
                 <div>
-                  <label htmlFor="ai-model" className="block text-xs font-bold uppercase tracking-wider text-slate-300">
-                    Model
-                  </label>
-                  <input
-                    id="ai-model"
-                    type="text"
-                    required
-                    minLength={2}
-                    maxLength={120}
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    className="mt-2 h-11 w-full rounded-xl border border-white/15 !bg-transparent px-4 text-xs font-mono text-white outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
-                  />
+                  <div className="flex items-center justify-between gap-3">
+                    <label htmlFor="ai-model" className="block text-xs font-bold uppercase tracking-wider text-slate-300">
+                      Model
+                    </label>
+                    <span className="text-right text-[11px] font-medium text-purple-400">
+                      Recommended: {getRecommendedModel(currentProviderObj.id)}
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    <AIModelSelect id="ai-model" provider={selectedProvider} value={model} onChange={setModel} />
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-2 text-[11px] text-slate-400">

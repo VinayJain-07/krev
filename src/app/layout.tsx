@@ -4,10 +4,16 @@ import { AppPreloader } from "@/components/app-preloader";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.AUTH_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(process.env.AUTH_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"),
   title: "KREV AI — AI CMO for Evidence-Led Marketing",
   description: "Turn your website into connected company intelligence, clear marketing priorities, and specialist agent work with an always-on AI CMO.",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.svg",
+  },
   openGraph: {
+    type: "website",
+    siteName: "KREV AI",
     title: "KREV AI — Give your marketing direction.",
     description: "Connect your company URL, build evidence-led marketing intelligence, and turn the next best move into work.",
     images: [{ url: "/og.png", width: 1200, height: 630, alt: "KREV AI CMO" }],

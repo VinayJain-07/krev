@@ -1,8 +1,9 @@
 import type { CompletionParams, LLMProvider } from "../types";
 import { providerFetch } from "../shared";
+import { DEFAULT_MODEL_BY_PROVIDER } from "../model-catalog";
 
 export const openAIProvider: LLMProvider = {
-  async validateKey(apiKey, model = process.env.SMARK_MODEL_OPENAI || "gpt-4o-mini") {
+  async validateKey(apiKey, model = process.env.SMARK_MODEL_OPENAI || DEFAULT_MODEL_BY_PROVIDER.openai) {
     await this.complete({ apiKey, model, messages: [{ role: "user", content: "Reply with OK." }], maxTokens: 12 });
   },
   async complete(params: CompletionParams) {

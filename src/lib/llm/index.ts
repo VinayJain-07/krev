@@ -3,6 +3,7 @@ import { geminiProvider } from "./providers/gemini";
 import { openAIProvider } from "./providers/openai";
 import { openRouterProvider } from "./providers/openrouter";
 import type { LLMProvider, ProviderName } from "./types";
+import { DEFAULT_MODEL_BY_PROVIDER } from "./model-catalog";
 
 const providers: Record<ProviderName, LLMProvider> = {
   anthropic: anthropicProvider,
@@ -12,10 +13,10 @@ const providers: Record<ProviderName, LLMProvider> = {
 };
 
 export const DEFAULT_MODELS: Record<ProviderName, string> = {
-  anthropic: process.env.SMARK_MODEL_ANTHROPIC || "claude-opus-5",
-  openai: process.env.SMARK_MODEL_OPENAI || "gpt-4o-mini",
-  openrouter: process.env.SMARK_MODEL_OPENROUTER || "openai/gpt-4o-mini",
-  google: process.env.SMARK_MODEL_GOOGLE || "gemini-1.5-flash",
+  anthropic: process.env.SMARK_MODEL_ANTHROPIC || DEFAULT_MODEL_BY_PROVIDER.anthropic,
+  openai: process.env.SMARK_MODEL_OPENAI || DEFAULT_MODEL_BY_PROVIDER.openai,
+  openrouter: process.env.SMARK_MODEL_OPENROUTER || DEFAULT_MODEL_BY_PROVIDER.openrouter,
+  google: process.env.SMARK_MODEL_GOOGLE || DEFAULT_MODEL_BY_PROVIDER.google,
 };
 
 export function getProvider(name: string): LLMProvider {

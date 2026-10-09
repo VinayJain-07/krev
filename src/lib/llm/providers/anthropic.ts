@@ -1,8 +1,9 @@
 import type { CompletionParams, LLMProvider } from "../types";
 import { providerFetch } from "../shared";
+import { DEFAULT_MODEL_BY_PROVIDER } from "../model-catalog";
 
 export const anthropicProvider: LLMProvider = {
-  async validateKey(apiKey, model = process.env.SMARK_MODEL_ANTHROPIC || "claude-opus-5") {
+  async validateKey(apiKey, model = process.env.SMARK_MODEL_ANTHROPIC || DEFAULT_MODEL_BY_PROVIDER.anthropic) {
     await this.complete({ apiKey, model, messages: [{ role: "user", content: "Reply with OK." }], maxTokens: 12 });
   },
   async complete(params: CompletionParams) {

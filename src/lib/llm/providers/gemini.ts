@@ -1,5 +1,6 @@
 import type { CompletionParams, LLMProvider } from "../types";
 import { providerFetch } from "../shared";
+import { DEFAULT_MODEL_BY_PROVIDER } from "../model-catalog";
 
 export function sanitizeSchemaForGemini(schema: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
   if (!schema || typeof schema !== "object" || schema === null) return undefined;
@@ -21,7 +22,7 @@ export function sanitizeSchemaForGemini(schema: Record<string, unknown> | undefi
 }
 
 export const geminiProvider: LLMProvider = {
-  async validateKey(apiKey, model = process.env.SMARK_MODEL_GOOGLE || "gemini-1.5-flash") {
+  async validateKey(apiKey, model = process.env.SMARK_MODEL_GOOGLE || DEFAULT_MODEL_BY_PROVIDER.google) {
     await this.complete({ apiKey, model, messages: [{ role: "user", content: "Reply with OK." }], maxTokens: 12 });
   },
   async complete(params: CompletionParams) {
