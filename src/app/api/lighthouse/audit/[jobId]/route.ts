@@ -1,6 +1,8 @@
 import type { LighthouseAuditJob } from "@prisma/client";
+import { after } from "next/server";
 import { requireApiUser } from "@/lib/auth-helpers";
 import { db } from "@/lib/db";
+import { enqueueLighthouseJob } from "@/lib/lighthouse/queue";
 import { isLighthouseStorageMissing, LIGHTHOUSE_STORAGE_MESSAGE } from "@/lib/lighthouse/storage";
 
 export const runtime = "nodejs";
@@ -32,6 +34,11 @@ export async function GET(_request: Request, context: { params: Promise<{ jobId:
         },
       });
     }
+  }
+  if (job.status === "QUEUED") {
+    after(async () => {
+      await enqueueLighthouseJob(job.id);
+    });
   }
   return Response.json({
     jobId: job.id,

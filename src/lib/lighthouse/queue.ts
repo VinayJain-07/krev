@@ -64,7 +64,7 @@ async function drainQueue() {
   }
 }
 
-export function enqueueLighthouseJob(jobId: string) {
+export async function enqueueLighthouseJob(jobId: string): Promise<void> {
   if (!state.pending.includes(jobId)) state.pending.push(jobId);
-  void drainQueue();
+  await drainQueue();
 }

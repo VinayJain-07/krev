@@ -74,9 +74,8 @@ export async function POST(request: Request) {
     if (!canAcceptLighthouseJob()) throw new LighthouseAuditError("SERVER_OVERLOAD", "The audit queue is full. Please try again in a few minutes.");
 
     const job = await db.lighthouseAuditJob.create({ data: { userId: user.id, normalizedUrl: normalizedUrl.href, strategy: parsed.data.strategy, cacheKey } });
-    enqueueLighthouseJob(job.id);
-    after(() => {
-      enqueueLighthouseJob(job.id);
+    after(async () => {
+      await enqueueLighthouseJob(job.id);
     });
     return Response.json({ jobId: job.id, status: "queued", cached: false }, { status: 202 });
   } catch (error) {
