@@ -1,5 +1,6 @@
 import type { CompletionParams, LLMProvider } from "../types";
 import { providerFetch } from "../shared";
+import { ProviderError } from "../types";
 import { DEFAULT_MODEL_BY_PROVIDER } from "../model-catalog";
 
 export function sanitizeSchemaForGemini(schema: Record<string, unknown> | undefined): Record<string, unknown> | undefined {
@@ -23,7 +24,17 @@ export function sanitizeSchemaForGemini(schema: Record<string, unknown> | undefi
 
 export const geminiProvider: LLMProvider = {
   async validateKey(apiKey, model = process.env.SMARK_MODEL_GOOGLE || DEFAULT_MODEL_BY_PROVIDER.google) {
-    await this.complete({ apiKey, model, messages: [{ role: "user", content: "Reply with OK." }], maxTokens: 12 });
+    try {
+      await this.complete({ apiKey, model, messages: [{ role: "user", content: "Reply with OK." }], maxTokens: 12 });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "";
+      if (/requests from referer|referer.*empty|referer.*blocked/i.test(message)) {
+        throw new ProviderError(
+          "Google rejected this key because it is restricted to browser HTTP referrers. KREV validates Gemini server-side. Create a new Google key with Application restrictions set to None and API restrictions limited to Generative Language API, then try again."
+        );
+      }
+      throw error;
+    }
   },
   async complete(params: CompletionParams) {
     const cleanSchema = params.jsonSchema ? sanitizeSchemaForGemini(params.jsonSchema.schema) : undefined;
