@@ -1181,7 +1181,7 @@ export function DashboardClient({ data }: { data: DashboardData }) {
             {(["health", "links", "technical", "aigeo"] as const).map((tabName) => <button key={tabName} className={analysisTab === tabName ? "active" : ""} onClick={() => setAnalysisTab(tabName)}>{tabName === "aigeo" ? "AEO / GEO" : tabName.slice(0, 1).toUpperCase() + tabName.slice(1)}</button>)}
           </div>
           {analysisTab === "health" && <div className="analytics-health-section">
-            {(lighthouse.status === "queued" || lighthouse.status === "running") && <AuditSkeleton status={lighthouse.status} />}
+            {(lighthouse.status === "queued" || lighthouse.status === "running") && <AuditSkeleton status={lighthouse.status} delayed={lighthouse.pollingDelayed} />}
 
             {lighthouse.status === "failed" && <div className="lighthouse-error" role="alert"><AlertTriangle size={17} /><div><strong>Lighthouse audit not completed</strong><span>{lighthouse.error}</span></div><button type="button" onClick={() => void lighthouse.startAudit(true)}><RotateCcw size={12} /> Try again</button></div>}
 

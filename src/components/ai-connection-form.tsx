@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { AlertCircle, CheckCircle2, LoaderCircle } from "lucide-react";
 import { AIModelSelect } from "@/components/ai-model-select";
 import { getRecommendedModel } from "@/lib/llm/model-catalog";
 
@@ -13,36 +14,55 @@ const providers = [
   { value: "google", label: "Google Gemini", hint: "Gemini models", icon: "/provider-logos/google-gemini.svg" },
 ] as const;
 
+type ConnectionState = "idle" | "verifying" | "connected" | "failed";
+type ValidationResponse = { error?: string; model?: string; ok?: boolean };
+
 export function AIConnectionForm({ returnTo = "/onboarding/company", initialProvider = "anthropic", initialModel, currentPreview, recoveryReason }: { returnTo?: string; initialProvider?: string; initialModel?: string | null; currentPreview?: string | null; recoveryReason?: "model" | null }) {
   const router = useRouter();
   const [provider, setProvider] = useState(initialProvider);
   const initialDefinition = providers.find((item) => item.value === initialProvider) ?? providers[0];
   const [model, setModel] = useState(initialModel || getRecommendedModel(initialDefinition.value));
   const [pending, setPending] = useState(false);
-  const [error, setError] = useState("");
+  const [connectionState, setConnectionState] = useState<ConnectionState>("idle");
+  const [connectionMessage, setConnectionMessage] = useState("");
   const selectedDefinition = providers.find((item) => item.value === provider) ?? providers[0];
   const canReuseSavedKey = Boolean(currentPreview && provider === initialProvider);
 
   function selectProvider(value: string) {
+    if (pending) return;
     const definition = providers.find((item) => item.value === value) ?? providers[0];
     setProvider(definition.value);
     setModel(definition.value === initialProvider && initialModel ? initialModel : getRecommendedModel(definition.value));
+    setConnectionState("idle");
+    setConnectionMessage("");
   }
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setPending(true);
-    setError("");
+    setConnectionState("verifying");
+    setConnectionMessage(`Contacting ${selectedDefinition.label} and testing ${model}…`);
     const data = new FormData(event.currentTarget);
     try {
       const apiKey = String(data.get("apiKey") ?? "").trim();
       const response = await fetch("/api/llm/validate", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ provider, apiKey: apiKey || undefined, model }) });
-      const result = await response.json() as { error?: string };
-      if (!response.ok) throw new Error(result.error ?? "The provider could not be connected.");
+      const responseText = await response.text();
+      let result: ValidationResponse | null = null;
+      try {
+        result = responseText ? JSON.parse(responseText) as ValidationResponse : null;
+      } catch {
+        throw new Error(`The connection check returned an invalid server response (${response.status}). Check the application logs and try again.`);
+      }
+      if (!response.ok) throw new Error(result?.error ?? "The provider could not be connected.");
+      if (!result?.ok) throw new Error("The provider did not confirm the connection. Please try again.");
+      setConnectionState("connected");
+      setConnectionMessage(`${selectedDefinition.label} connected successfully with ${result.model ?? model}. Continuing…`);
+      await new Promise((resolve) => window.setTimeout(resolve, 1_200));
       router.push(returnTo);
       router.refresh();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "The provider could not be connected.");
+      setConnectionState("failed");
+      setConnectionMessage(cause instanceof Error ? cause.message : "The provider could not be connected.");
     } finally {
       setPending(false);
     }
@@ -58,7 +78,7 @@ export function AIConnectionForm({ returnTo = "/onboarding/company", initialProv
           : `We make one live request to verify the key and structured-output support. Once accepted, it is encrypted and used only for your workspace.${currentPreview ? ` Current key: ${currentPreview}` : ""}`}
       </p>
 
-      <form onSubmit={submit} className="mt-6 space-y-5">
+      <form onSubmit={submit} className="mt-6 space-y-5" aria-busy={pending}>
         <div>
           <label className="block text-xs font-bold uppercase tracking-wider text-slate-300 mb-3">
             Choose Provider
@@ -75,6 +95,7 @@ export function AIConnectionForm({ returnTo = "/onboarding/company", initialProv
                 role="radio"
                 aria-checked={provider === item.value}
                 onClick={() => selectProvider(item.value)}
+                disabled={pending}
                 key={item.value}
               >
                 <div className="flex size-11 shrink-0 items-center justify-center rounded-lg bg-white/10 p-2 border border-white/10">
@@ -99,6 +120,7 @@ export function AIConnectionForm({ returnTo = "/onboarding/company", initialProv
             type="password"
             autoComplete="off"
             required={!canReuseSavedKey}
+            disabled={pending}
             minLength={10}
             placeholder={canReuseSavedKey ? `Leave blank to reuse ${currentPreview}` : "Paste your provider key"}
             className="mt-2 h-12 w-full rounded-xl border border-white/15 bg-white/[0.05] px-4 font-mono text-xs text-white placeholder-slate-500 outline-none transition-all focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20"
@@ -126,9 +148,19 @@ export function AIConnectionForm({ returnTo = "/onboarding/company", initialProv
           </p>
         </div>
 
-        {error && (
-          <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-xs text-rose-300" role="alert">
-            {error}
+        {connectionState !== "idle" && (
+          <div
+            className={`provider-connection-status provider-connection-status--${connectionState}`}
+            role={connectionState === "failed" ? "alert" : "status"}
+            aria-live="polite"
+          >
+            {connectionState === "verifying" && <LoaderCircle className="animate-spin" size={18} aria-hidden="true" />}
+            {connectionState === "connected" && <CheckCircle2 size={18} aria-hidden="true" />}
+            {connectionState === "failed" && <AlertCircle size={18} aria-hidden="true" />}
+            <div>
+              <strong>{connectionState === "verifying" ? "Verifying live connection" : connectionState === "connected" ? "Provider connected" : "Connection failed"}</strong>
+              <span>{connectionMessage}</span>
+            </div>
           </div>
         )}
 
@@ -137,7 +169,7 @@ export function AIConnectionForm({ returnTo = "/onboarding/company", initialProv
           type="submit"
           disabled={pending}
         >
-          <span>{pending ? "Verifying with provider…" : "Verify and continue"}</span>
+          <span>{connectionState === "connected" ? "Connected" : pending ? "Testing live connection…" : "Verify and continue"}</span>
           <span>&rarr;</span>
         </button>
 
