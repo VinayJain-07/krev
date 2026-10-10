@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { hasAdminSession } from "@/lib/admin/session";
+import { buildAdminActivityFeed, type AdminFeedEvent } from "@/lib/admin/feed";
 import { fourOhFourSignOut } from "./actions";
 import { FourOhFourRefresh } from "./refresh";
 
@@ -28,6 +29,23 @@ function databaseLabel() {
   }
 }
 
+type AdminUserRow = {
+  id: string;
+  name: string | null;
+  email: string;
+  createdAt: Date;
+  companies: Array<{ id: string; name: string; normalizedDomain: string; createdAt: Date }>;
+  activityEvents: Array<{ createdAt: Date }>;
+  _count: { companies: number };
+};
+
+type InterestCompany = {
+  id: string;
+  name: string;
+  normalizedDomain: string;
+  user: { email: string };
+};
+
 export default async function FourOhFourPage() {
   if (!(await hasAdminSession())) redirect("/404/login");
   const sevenDaysAgo = recentWindowStart();
@@ -36,8 +54,15 @@ export default async function FourOhFourPage() {
   let totalCompanies = 0;
   let loggedInUsers: { userId: string }[] = [];
   let recentUsers: { userId: string }[] = [];
-  let users: any[] = [];
-  let recentActivity: any[] = [];
+  let users: AdminUserRow[] = [];
+  let trackedActivity: AdminFeedEvent[] = [];
+  let recentCompanies: Array<{
+    id: string;
+    name: string;
+    normalizedDomain: string;
+    createdAt: Date;
+    user: { name: string | null; email: string };
+  }> = [];
   let companyViews: { companyId: string | null; _count: { companyId: number } }[] = [];
 
   try {
@@ -61,6 +86,12 @@ export default async function FourOhFourPage() {
           orderBy: { createdAt: "desc" },
           select: { id: true, name: true, normalizedDomain: true, createdAt: true },
         },
+        activityEvents: {
+          where: { kind: "LOGIN" },
+          take: 1,
+          orderBy: { createdAt: "desc" },
+          select: { createdAt: true },
+        },
         _count: { select: { companies: true } },
       },
     });
@@ -78,6 +109,12 @@ export default async function FourOhFourPage() {
             orderBy: { createdAt: "desc" },
             select: { id: true, name: true, normalizedDomain: true, createdAt: true },
           },
+          activityEvents: {
+            where: { kind: "LOGIN" },
+            take: 1,
+            orderBy: { createdAt: "desc" },
+            select: { createdAt: true },
+          },
           _count: { select: { companies: true } },
         },
       });
@@ -85,16 +122,25 @@ export default async function FourOhFourPage() {
   }
 
   try {
-    loggedInUsers = (await (db as any).activityEvent?.groupBy({ by: ["userId"], where: { kind: "LOGIN" } })) ?? [];
+    loggedInUsers = await db.activityEvent.findMany({
+      where: { kind: "LOGIN" },
+      distinct: ["userId"],
+      select: { userId: true },
+    });
   } catch {}
 
   try {
-    recentUsers = (await (db as any).activityEvent?.groupBy({ by: ["userId"], where: { kind: "LOGIN", createdAt: { gte: sevenDaysAgo } } })) ?? [];
+    recentUsers = await db.activityEvent.findMany({
+      where: { kind: "LOGIN", createdAt: { gte: sevenDaysAgo } },
+      distinct: ["userId"],
+      select: { userId: true },
+    });
   } catch {}
 
   try {
-    recentActivity = (await (db as any).activityEvent?.findMany({
+    trackedActivity = await db.activityEvent.findMany({
       take: 80,
+      where: { kind: { in: ["LOGIN", "COMPANY_VIEWED"] } },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -104,22 +150,43 @@ export default async function FourOhFourPage() {
         user: { select: { name: true, email: true } },
         company: { select: { name: true, normalizedDomain: true } },
       },
-    })) ?? [];
+    });
   } catch {}
 
   try {
-    companyViews = (await (db as any).activityEvent?.groupBy({
-      by: ["companyId"],
+    recentCompanies = await db.company.findMany({
+      take: 80,
+      orderBy: { createdAt: "desc" },
+      select: {
+        id: true,
+        name: true,
+        normalizedDomain: true,
+        createdAt: true,
+        user: { select: { name: true, email: true } },
+      },
+    });
+  } catch {}
+
+  try {
+    const views = await db.activityEvent.findMany({
       where: { kind: "COMPANY_VIEWED", companyId: { not: null } },
-      _count: { companyId: true },
-      orderBy: { _count: { companyId: "desc" } },
-      take: 12,
-    })) ?? [];
+      orderBy: { createdAt: "desc" },
+      take: 5000,
+      select: { companyId: true },
+    });
+    const counts = new Map<string, number>();
+    for (const view of views) {
+      if (view.companyId) counts.set(view.companyId, (counts.get(view.companyId) ?? 0) + 1);
+    }
+    companyViews = [...counts.entries()]
+      .map(([companyId, count]) => ({ companyId, _count: { companyId: count } }))
+      .sort((left, right) => right._count.companyId - left._count.companyId)
+      .slice(0, 12);
   } catch {}
 
-  let interestCompanies: any[] = [];
+  let interestCompanies: InterestCompany[] = [];
   try {
-    const ids = companyViews.flatMap((item: any) => (item.companyId ? [item.companyId] : []));
+    const ids = companyViews.flatMap((item) => (item.companyId ? [item.companyId] : []));
     if (ids.length > 0) {
       interestCompanies = await db.company.findMany({
         where: { id: { in: ids } },
@@ -127,11 +194,16 @@ export default async function FourOhFourPage() {
       });
     }
   } catch {}
-  const companyById = new Map(interestCompanies.map((company: any) => [company.id, company]));
+  const companyById = new Map(interestCompanies.map((company) => [company.id, company]));
+  const recentActivity = buildAdminActivityFeed({
+    registrations: users.map((user) => ({ id: user.id, name: user.name, email: user.email, createdAt: user.createdAt })),
+    companies: recentCompanies,
+    trackedEvents: trackedActivity,
+  });
 
   return <main className="admin-shell">
     <header className="admin-header">
-      <div><span className="admin-eyebrow">KREV AI / 404 VIEW</span><h1>404 page</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
+      <div><span className="admin-eyebrow">KREV AI / PRIVATE ADMIN</span><h1>Account activity</h1><p>Every account in the connected database, when it joined, and the companies it added. Updated every 30 seconds while this tab is visible.</p><span className="admin-source">{databaseLabel()}</span></div>
       <div className="admin-header-actions"><Link href="/" className="admin-nav-back">Back to app</Link><FourOhFourRefresh /><form action={fourOhFourSignOut}><button type="submit">Sign out</button></form></div>
     </header>
 
@@ -143,16 +215,16 @@ export default async function FourOhFourPage() {
         <article><span>Total companies</span><strong>{totalCompanies.toLocaleString()}</strong><small>Across all registered accounts</small></article>
       </section>
 
-      <p className="admin-tracking-note">Login and company-view history starts with this update. Existing accounts and companies are included in totals, while earlier visits are unavailable.</p>
+      <p className="admin-tracking-note">Registrations and company additions come directly from database records. Login and company-view history starts when activity tracking was enabled.</p>
 
       <div className="admin-columns">
         <section className="admin-panel admin-people">
           <div className="admin-panel-heading"><div><span>ACCOUNT DIRECTORY</span><h2>All registered accounts</h2></div><small>Showing all {users.length.toLocaleString()} accounts</small></div>
           <div className="admin-table-wrap"><table><thead><tr><th>Account</th><th>Joined on</th><th>Companies</th><th>Last sign-in</th></tr></thead><tbody>
-            {users.map((user: any) => <tr key={user.id}>
+            {users.map((user) => <tr key={user.id}>
               <td><strong>{user.name || "Unnamed user"}</strong><small>{user.email}</small></td>
               <td>{when(user.createdAt)}</td>
-              <td><strong className="admin-company-count">{user._count.companies.toLocaleString()}</strong><div className="admin-company-tags">{user.companies.map((company: any) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}{user._count.companies > user.companies.length && <span>+{user._count.companies - user.companies.length} more</span>}</div></td>
+              <td><strong className="admin-company-count">{user._count.companies.toLocaleString()}</strong><div className="admin-company-tags">{user.companies.map((company) => <span key={company.id} title={company.normalizedDomain}>{company.name}</span>)}{user._count.companies > user.companies.length && <span>+{user._count.companies - user.companies.length} more</span>}</div></td>
               <td>{when(user.activityEvents?.[0]?.createdAt)}</td>
             </tr>)}
             {!users.length && <tr><td colSpan={4} className="admin-empty">No accounts yet.</td></tr>}
@@ -171,9 +243,9 @@ export default async function FourOhFourPage() {
 
       <section className="admin-panel admin-activity">
         <div className="admin-panel-heading"><div><span>RECENT EVENTS</span><h2>Activity feed</h2></div><small>Most recent {recentActivity.length} events</small></div>
-        <div className="admin-activity-list">{recentActivity.map((event: any) => <div key={event.id}>
+        <div className="admin-activity-list">{recentActivity.map((event) => <div key={event.id}>
           <span className={`admin-event-mark admin-event-${event.kind.toLowerCase()}`} />
-          <p><strong>{event.user.name || event.user.email}</strong> {event.kind === "LOGIN" ? `signed in${event.detail ? ` with ${event.detail}` : ""}` : event.kind === "COMPANY_CREATED" ? "added a company" : "opened a company workspace"}{event.company && <> · <b>{event.company.name}</b></>}<small>{event.user.email}</small></p>
+          <p><strong>{event.user.name || event.user.email}</strong> {event.kind === "REGISTERED" ? "registered a new account" : event.kind === "LOGIN" ? `signed in${event.detail ? ` with ${event.detail}` : ""}` : event.kind === "COMPANY_CREATED" ? "added a company" : "opened a company workspace"}{event.company && <> · <b>{event.company.name}</b></>}<small>{event.user.email}</small></p>
           <time dateTime={event.createdAt.toISOString()}>{when(event.createdAt)}</time>
         </div>)}{!recentActivity.length && <p className="admin-empty">No activity has been recorded yet.</p>}</div>
       </section>

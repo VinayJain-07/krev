@@ -45,6 +45,7 @@
 .admin-activity-list > div { min-height: 64px; padding: 12px 0; display: flex; align-items: flex-start; gap: 12px; border-bottom: 1px solid #f1eaf1; }
 .admin-activity-list > div:last-child { border: 0; }
 .admin-event-mark { width: 9px; height: 9px; flex: none; margin-top: 5px; border-radius: 50%; background: #ad65d1; box-shadow: 0 0 0 4px #f4eafa; }
+.admin-event-registered { background: #4c6edb; box-shadow: 0 0 0 4px #edf1ff; }
 .admin-event-company_created { background: #cb6487; box-shadow: 0 0 0 4px #fff0f5; }
 .admin-event-company_viewed { background: #23a47e; box-shadow: 0 0 0 4px #eaf8f2; }
 .admin-activity-list p { flex: 1; margin: 0; color: #5f5363; font-size: 12px; line-height: 1.4; }
