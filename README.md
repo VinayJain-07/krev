@@ -136,4 +136,8 @@ The Python URL timing result remains visible as a basic fallback. It reports HTT
 
 Never commit `.env`, `.env.local`, database credentials, or provider keys.
 
+## Qloo cultural intelligence
+
+The authenticated **Culture Graph** page grounds audience analysis and campaign planning in Qloo's cultural taste graph. Add `QLOO_API_KEY` as a server-side secret (and optionally `QLOO_BASE_URL`) to enable entity search, affinity insights, and explainability signals. The integration is documented in [`docs/qloo-integration.md`](docs/qloo-integration.md); without a key, KREV reports a clear recoverable configuration state and does not invent cultural evidence.
+
 Backlink counts, Search Console index coverage, live social threads, and answer-engine citation share are never fabricated. Their interfaces explicitly remain unavailable until an approved official or first-party source is connected.
