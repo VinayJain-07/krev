@@ -39,6 +39,11 @@ if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+  // Keep the server route parser aligned with app/api/auth/[...nextauth].
+  // Auth.js otherwise derives this from the pathname in AUTH_URL, so a
+  // deployment value such as https://host.example/api can make every
+  // /api/auth/* request fail with a generic HTTP 400 "Bad request."
+  basePath: "/api/auth",
   providers,
   pages: { signIn: "/login" },
   session: { strategy: "jwt" },
